@@ -1,0 +1,22 @@
+{
+  "name": "nodejs-console-app1",
+  "version": "0.0.1",
+  "description": "NodejsConsoleApp1",
+  "main": "app.js",
+  "author": {
+    "name": "Administrator"
+  },
+  "dependencies": {
+    "angular": "^1.6.1",
+    "angular-material": "^1.1.1",
+    "bufferpack": "0.0.6",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.14.0",
+    "jsmodbus": "^2.0.2",
+    "nano": "^6.2.0",
+    "node-couchdb": "^1.1.0",
+    "node-serial": "^0.1.1",
+    "serialport": "^4.0.7",
+    "wmi-client": "^0.3.0"
+  }
+}
