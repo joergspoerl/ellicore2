@@ -16,6 +16,7 @@
     "nano": "^6.2.0",
     "node-couchdb": "^1.1.0",
     "node-serial": "^0.1.1",
+    "pouchdb": "^6.3.4",
     "serialport": "^4.0.7",
     "wmi-client": "^0.3.0"
   }
