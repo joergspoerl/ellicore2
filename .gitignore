@@ -1,6 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# own files
 dbCredentials.json
+# local pouchdb
+/ellicore-current
 
 # compiled output
 /dist
