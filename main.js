@@ -12,6 +12,7 @@ console.log("dbCurrent: ", dbCurrentInstance);
 function writeCurrent () {
     dbCurrentInstance.dbLocal.get('current').then(
         doc => {
+            doc.date = Date.now();
             doc.tristar = tristar();
             dbCurrentInstance.dbLocal.put(doc).then(
                 ok => console.log("--> write: ", ok),
@@ -25,19 +26,19 @@ function writeCurrent () {
 dbCurrentInstance.dbLocal.sync(dbCurrentInstance.dbRemote, {
     live: true,
     retry: true
-  }).on('change', function (change) {
+}).on('change', function (change) {
     // yo, something changed!
     console.log('==> change: ', change);
     //console.log('==> change docs: ', JSON.stringify(change));
-    change.change.docs.forEach ( item => {
+    change.change.docs.forEach(item => {
         if (item._id == 'controll') {
-            console.log ('controll changed !', item.request);
+            console.log('controll changed !', item.request);
             writeCurrent();
         }
-            
+
     })
     //writeCurrent();
-  }).on('paused', function (info) {
+}).on('paused', function (info) {
     // replication was paused, usually because of a lost connection
     console.log('==> paused: ', info);
 }).on('active', function (info) {
