@@ -7,7 +7,7 @@ var tristar = {};
 
 // create a modbus client
 var client = modbus.client.tcp.complete({
-    'host': "TSMPPT10480676",
+    'host': "192.168.1.32", //192.168.1.32 TSMPPT10480676
     'port': 502,
     'autoReconnect': true,
     'reconnectTimeout': 4000,
@@ -69,7 +69,8 @@ function readTristar(hr) {
 
     tristar = {
 
-        // Filtered ADC        adc_vb_f_med: {
+        // Filtered ADC
+        adc_vb_f_med: {
             value: hr.register[24] * v_scale,
             descr: 'Battery voltage, filtered',
             unit: 'V'
@@ -109,9 +110,11 @@ function readTristar(hr) {
         adc_p3_f :    { value: hr.register[31] * 6.6 * Math.pow(2, -15), descr: "3 volt supply, filtered", unit: "V" },
         adc_pmeter_f: { value: hr.register[32] * 18.612 * Math.pow(2, -15), descr: "MeterBus voltage, filtered", unit: "V" },
         adc_p18_f:    { value: hr.register[33] * 3 * Math.pow(2, -15), descr: "1.8 volt supply, filtered", unit: "V" },
-        adc_v_ref:    { value: hr.register[34] * 3 * Math.pow(2, -15), descr: "reference voltage", unit: "V" }    }
+        adc_v_ref:    { value: hr.register[34] * 3 * Math.pow(2, -15), descr: "reference voltage", unit: "V" }
+    }
 
-    // Temperatures    tristar.T_hs   = hr.register[35]; // Heatsink temperature C √ -127 to + 127
+    // Temperatures
+    tristar.T_hs   = hr.register[35]; // Heatsink temperature C √ -127 to + 127
     tristar.T_rts  = hr.register[36]; // RTS temperature (0x80 = disconnect)  C √ -127 to + 127
     tristar.T_batt = hr.register[37]; // Battery regulation temperature C √ -127 to + 127
 
