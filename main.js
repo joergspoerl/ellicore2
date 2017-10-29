@@ -12,16 +12,41 @@ console.log("dbCurrent: ", dbCurrentInstance);
 function writeCurrent () {
     dbCurrentInstance.dbLocal.get('current').then(
         doc => {
-            doc.date = Date.now();
-            doc.tristar = tristar();
-            dbCurrentInstance.dbLocal.put(doc).then(
-                ok => console.log("--> write: ", ok),
-                error => console.log("--> write error: ", error)
-            )
-            dbCurrentInstance.dbLocal.compact();
-            dbCurrentInstance.dbRemote.compact();
+            putCurrent(doc);
+        },
+
+        error => {
+            if (error.status == 404) {
+                putCurrent({_id:'current'});                
+            }
         }
     )
+
+    function putCurrent (doc) {
+        doc.date = Date.now();
+        doc.tristar = tristar();
+        dbCurrentInstance.dbLocal.put(doc).then(
+            ok => {
+                console.log("--> write: ", ok)
+                compact();
+            },
+            error => {
+                console.log("--> write error: ", error)
+            }
+        )
+    }
+
+    function compact() {
+        dbCurrentInstance.dbLocal.compact().then(
+            ok => console.log("--> dbLocal compact !"),
+            er => console.log("--> dbLocal compact ERROR !", er)
+        );
+        dbCurrentInstance.dbRemote.compact().then(
+            ok => console.log("--> dbRemote compact !"),
+            er => console.log("--> dbRemote compact ERROR !", er)
+        );;
+
+    }
 }
 
 
@@ -32,10 +57,11 @@ dbCurrentInstance.dbLocal.sync(dbCurrentInstance.dbRemote, {
     // yo, something changed!
     console.log('==> change: ', change);
     //console.log('==> change docs: ', JSON.stringify(change));
-    change.change.docs.forEach(item => {
+    change.change.docs.some(item => {
         if (item._id == 'controll') {
             console.log('controll changed !', item.request);
             writeCurrent();
+            return true; // break
         }
 
     })
