@@ -18,6 +18,8 @@ function writeCurrent () {
                 ok => console.log("--> write: ", ok),
                 error => console.log("--> write error: ", error)
             )
+            dbCurrentInstance.dbLocal.compact();
+            dbCurrentInstance.dbRemote.compact();
         }
     )
 }
