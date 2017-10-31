@@ -3,7 +3,7 @@ function dbCurrent() {
     const dbCredentials = require('./dbCredentials.json');
     const pouchOptions = {
         auto_compaction: true,
-        revs_limit: 1
+        //revs_limit: 1
     }
 
     this.dbLocal = new PouchDB(dbCredentials.name, pouchOptions);

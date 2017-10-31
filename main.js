@@ -28,7 +28,7 @@ function writeCurrent () {
         dbCurrentInstance.dbLocal.put(doc).then(
             ok => {
                 console.log("--> write: ", ok)
-                compact();
+                //compact();
             },
             error => {
                 console.log("--> write error: ", error)
