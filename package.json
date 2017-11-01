@@ -7,6 +7,7 @@
     "name": "Administrator"
   },
   "dependencies": {
+    "@types/pouchdb": "^6.3.1",
     "angular": "^1.6.1",
     "angular-material": "^1.1.1",
     "bufferpack": "0.0.6",
