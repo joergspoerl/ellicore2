@@ -17,6 +17,7 @@
     "node-couchdb": "^1.1.0",
     "node-serial": "^0.1.1",
     "pouchdb": "^6.3.4",
+    "prettyjson": "^1.2.1",
     "serialport": "^4.0.7",
     "wmi-client": "^0.3.0"
   }
