@@ -34,4 +34,45 @@ export class DbCurrent {
         )
     }
 
+
+
+    writeCurrent(newValue:any) {
+        this.dbLocal.get("current").then(
+            current => {
+                newValue._id = current._id;
+                newValue._rev = current._rev;
+                this.dbLocal.put(current).then(
+                    ok => {
+                        console.log("current value saved !")
+                    }
+                )
+            },
+            error => {
+                if (error.status == 404) {
+                    newValue._id = 'current';
+    
+                    this.dbRemote.put(newValue).then(
+                        ok => {
+                            console.log("current value created !")
+                        })
+                }
+                console.log("ERROR: ", error);
+            }
+        )
+    
+    }
+    
+    writeCurrentWithTimer (cb:any) {
+        let self = this;
+        let tristar = cb();
+
+        setInterval(function() {
+            console.log("Interval ...")
+            var doc = {
+                date: Date.now(),
+                tristar: tristar
+            }
+            self.writeCurrent(doc);
+        }, 10000);
+    }
 }
