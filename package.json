@@ -20,5 +20,15 @@
     "prettyjson": "^1.2.1",
     "serialport": "^4.0.7",
     "wmi-client": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.47",
+    "nodemon": "^1.12.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  },
+  "scripts": {
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./index.ts"
   }
 }

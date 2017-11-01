@@ -1,7 +1,7 @@
 var prettyjson = require('prettyjson');
 
 
-function debug(args) {
+function log(args) {
     var content = ''
     for (var i = 0, j = arguments.length; i < j; i++) {
       content += (prettyjson.render(arguments[i]) + '\r\n');
@@ -25,4 +25,4 @@ function getDateTimeString () {
 }
 
 
-module.exports = debug
+module.exports = log
