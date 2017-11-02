@@ -12,4 +12,4 @@ let dbCurrent = new DbCurrent();
 dbCurrent.getInfo();
 
 console.log ("Hello World");
-dbCurrent.startTimer(tristar, bmv);
+dbCurrent.startTimer(tristar, () => {});

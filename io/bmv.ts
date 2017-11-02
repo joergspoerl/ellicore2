@@ -38,76 +38,83 @@ var BMV_values = {
 };
 var frame = new Buffer(0);
 
+function receiveBmv (serialPort) {
 
-// open serial port
-var port = new SerialPort('COM4', {
-    baudRate: 19200,
-    parser: SerialPort.parsers.byteDelimiter([13, 10])
-});
+    // open serial port
+    var port = new SerialPort(serialPort, {
+        baudRate: 19200,
+        parser: SerialPort.parsers.byteDelimiter([13, 10])
+    });
 
-// wait for open port
-// set controll bits, then BMW-cabelconverter is working
-setTimeout(function () {
+    // wait for open port
+    // set controll bits, then BMW-cabelconverter is working
+    setTimeout(function () {
 
-    var levelConverterOn = function () {
-        port.set({
-            "dtr": false,
-            "rts": false,
-            "cts": false,
-            "dts": false,
-            "brk": false,
-        });
-    };
-    levelConverterOn();
-
-
-}, 1000); // Timer
+        var levelConverterOn = function () {
+            port.set({
+                "dtr": false,
+                "rts": false,
+                "cts": false,
+                "dts": false,
+                "brk": false,
+            });
+        };
+        levelConverterOn();
 
 
+    }, 1000); // Timer
 
 
-// on recive data event
-port.on('data', function (data:any) {
 
-    //line = new Buffer(data).toString('ascii');
-    let line = new Buffer(data)
-    frame = Buffer.concat([frame, line]);
 
-    // Detect end of frame
-    if (line.toString().startsWith("Checksum")) {
-        // Modulo256
-        var sum = 0;
-        for (var i = 0; i < frame.length; i++) {
-            sum = (sum + frame[i]) % 256;
+    // on recive data event
+    port.on('data', function (data:any) {
+
+        //line = new Buffer(data).toString('ascii');
+        let line = new Buffer(data)
+        frame = Buffer.concat([frame, line]);
+
+        // Detect end of frame
+        if (line.toString().startsWith("Checksum")) {
+            // Modulo256
+            var sum = 0;
+            for (var i = 0; i < frame.length; i++) {
+                sum = (sum + frame[i]) % 256;
+            }
+
+            if (sum == 0) {
+                // frame is ok
+                parseValues(frame);
+
+            } else {
+                //console.log("frame error !!!");
+            }
+
+            // reset frame
+            frame = new Buffer(0);
         }
 
-        if (sum == 0) {
-            // frame is ok
-            parseValues(frame);
+    });
 
-        } else {
-            //console.log("frame error !!!");
-        }
 
-        // reset frame
-        frame = new Buffer(0);
+
+    // convert frame to javascript object
+    function parseValues (frame) {
+        
+            var lines = new Buffer(frame).toString('ascii').split('\r\n');
+        
+            for (var i = 0; i < lines.length - 2; i++) {
+                let line = lines[i].split('\t');
+                BMV_values[line[0]].value = BMV_values[line[0]].scale(line[1]);
+            }
+        
     }
-
-});
-
-
-
-// convert frame to javascript object
-function parseValues (frame) {
-
-    var lines = new Buffer(frame).toString('ascii').split('\r\n');
-
-    for (var i = 0; i < lines.length - 2; i++) {
-        let line = lines[i].split('\t');
-        BMV_values[line[0]].value = BMV_values[line[0]].scale(line[1]);
-    }
+    
 
 }
+
+
+// receiveBmv('/dev/tty1');
 
 module.exports = function () 
 {
