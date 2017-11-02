@@ -1,8 +1,10 @@
-﻿// Tristar MODBUS
+﻿import { ITristar } from "../types/EllicoreTypes";
+
+// Tristar MODBUS
 
 var modbus = require('jsmodbus');
 
-var tristar = {};
+var tristar:any = {};
 
 
 // create a modbus client
@@ -33,7 +35,7 @@ setInterval(function () {
 
     //console.log("begin setTimout");
 
-    client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
+    client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister:any) {
 
         readTristar(tristarHoldingRegister);
 
@@ -42,14 +44,14 @@ setInterval(function () {
 
 
 
-client.on('error', function (err) {
+client.on('error', function (err:any) {
 
     console.log(err);
 
 })
 
 
-function readTristar(hr) {
+function readTristar(hr:any) {
 
     // for all indexes, subtract 1 from what's in the manual
 
@@ -171,4 +173,12 @@ function readTristar(hr) {
 }
 
 
-module.exports = function () { return tristar };
+module.exports = function ():ITristar { 
+    let tristarOutput: ITristar = {
+        battsI: tristar.battsI,
+        battsV: tristar.battsV,
+        inPower: tristar.inPower,
+        rtsTemp: tristar.rtsTemp
+    }
+    return tristarOutput 
+};

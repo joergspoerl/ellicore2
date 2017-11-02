@@ -1,5 +1,5 @@
 import * as PouchDB from "pouchdb";
-import { ICurrentDoc } from '../types/ICurrentDoc'
+import { ICurrentDoc } from '../types/EllicoreTypes'
 
 export class DbCurrent {
 
@@ -21,6 +21,8 @@ export class DbCurrent {
         this.dbRemote = new PouchDB ('https://'
         + this.dbCredentials.usr + ':' + this.dbCredentials.pwd + '@'
         + this.dbCredentials.url + this.dbCredentials.name, this.pouchOptions);
+
+        this.compact();
     }
 
 
@@ -61,7 +63,7 @@ export class DbCurrent {
             current => {
                 newValue._id = current._id;
                 newValue._rev = current._rev;
-                this.dbLocal.put(current).then(
+                this.dbLocal.put(newValue).then(
                     ok => {
                         console.log("current value saved !");
                         this.sync();
@@ -83,22 +85,20 @@ export class DbCurrent {
     
     }
     
-    startTimer (cb:any) {
+    startTimer (cb_tristar:any, cb_bmv:any) {
         let self = this;
-        let tristar = cb();
-
 
         setInterval(function() {
             var doc:ICurrentDoc = {
                 _id: 'current',
                 _rev: '',                
                 date: Date.now(),
-                tristar: cb(),
-                bmv: null,
+                tristar: cb_tristar(),
+                bmv: cb_bmv(),
                 mk2: null
             }
             self.writeCurrent(doc);
-        }, 60000); // every minute
+        }, 10000); // every minute
 
 
         setInterval(function() {
