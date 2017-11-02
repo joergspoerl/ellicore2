@@ -48,6 +48,14 @@ export class DbCurrent {
     }
 
 
+    sync () {
+        this.dbLocal.sync(this.dbRemote).then(
+            info => console.log("sync -> info: ", info),
+            error =>console.log("sync -> error: ", error)
+        )
+    }
+
+
     writeCurrent(newValue:ICurrentDoc) {
         this.dbLocal.get("current").then(
             current => {
@@ -55,7 +63,8 @@ export class DbCurrent {
                 newValue._rev = current._rev;
                 this.dbLocal.put(current).then(
                     ok => {
-                        console.log("current value saved !")
+                        console.log("current value saved !");
+                        this.sync();
                     }
                 )
             },
@@ -84,7 +93,7 @@ export class DbCurrent {
                 _id: 'current',
                 _rev: '',                
                 date: Date.now(),
-                tristar: tristar(),
+                tristar: cb(),
                 bmv: null,
                 mk2: null
             }
