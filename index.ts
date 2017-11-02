@@ -11,4 +11,4 @@ let dbCurrent = new DbCurrent();
 dbCurrent.getInfo();
 
 console.log ("Hello World");
-dbCurrent.writeCurrentWithTimer(tristar);
+dbCurrent.startTimer(tristar);

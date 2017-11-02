@@ -1,4 +1,5 @@
 import * as PouchDB from "pouchdb";
+import { ICurrentDoc } from '../types/ICurrentDoc'
 
 export class DbCurrent {
 
@@ -25,18 +26,29 @@ export class DbCurrent {
 
     getInfo () {
         this.dbLocal.info().then(
-            info => console.log("info: ", info),
-            error =>console.log("error: ", error)
+            info => console.log("getInfo -> info: ", info),
+            error =>console.log("getInfo -> error: ", error)
         )
         this.dbRemote.info().then(
-            info => console.log("info: ", info),
-            error =>console.log("error: ", error)
+            info => console.log("getInfo -> info: ", info),
+            error =>console.log("getInfo -> error: ", error)
         )
     }
 
 
+    compact () {
+        this.dbLocal.compact().then(
+            info => console.log("compact -> info: ", info),
+            error =>console.log("compact -> error: ", error)
+        )
+        this.dbRemote.compact().then(
+            info => console.log("compact -> info: ", info),
+            error =>console.log("compact -> error: ", error)
+        )
+    }
 
-    writeCurrent(newValue:any) {
+
+    writeCurrent(newValue:ICurrentDoc) {
         this.dbLocal.get("current").then(
             current => {
                 newValue._id = current._id;
@@ -62,17 +74,26 @@ export class DbCurrent {
     
     }
     
-    writeCurrentWithTimer (cb:any) {
+    startTimer (cb:any) {
         let self = this;
         let tristar = cb();
 
+
         setInterval(function() {
-            console.log("Interval ...")
-            var doc = {
+            var doc:ICurrentDoc = {
+                _id: 'current',
+                _rev: '',                
                 date: Date.now(),
-                tristar: tristar
+                tristar: tristar(),
+                bmv: null,
+                mk2: null
             }
             self.writeCurrent(doc);
-        }, 10000);
+        }, 60000); // every minute
+
+
+        setInterval(function() {
+            self.compact();
+        }, 60000 * 60); // every hour
     }
 }
