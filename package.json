@@ -20,6 +20,7 @@
     "pouchdb": "^6.3.4",
     "prettyjson": "^1.2.1",
     "raspi": "^5.0.2",
+    "raspi-gpio": "^5.0.0",
     "raspi-i2c": "^6.1.0",
     "serialport": "^4.0.7",
     "wmi-client": "^0.3.0"
