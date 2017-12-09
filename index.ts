@@ -19,6 +19,7 @@ console.log ("Begin program ...");
 
 
 
-var s:string = "Hallo";
-var a = require( './i2c-test' )
-console.log("index.ts -> Start ...")
+var s:string = "index.ts -> Start ...";
+import "./i2c-test"
+
+console.log(s)
