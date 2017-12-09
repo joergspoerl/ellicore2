@@ -97,8 +97,8 @@ async function initSAA(address) {
 
         while (true) {
           console.log(address, "ok")
-          i2c.writeByteSync(address, 0, randomIntInc(0,255))
-          await sleep(randomIntInc(0,255));     
+          // i2c.writeByteSync(address, 0, randomIntInc(0,255))
+          // await sleep(randomIntInc(0,255));     
           i2c.writeByteSync(address, 1, randomIntInc(0,255))
           await sleep(randomIntInc(0,255));     
           i2c.writeByteSync(address, 2, randomIntInc(0,255))     

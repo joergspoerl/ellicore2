@@ -3,13 +3,22 @@
     Hello World Node App
 
 */
-import { DbCurrent } from './db/db'
-var tristar = require ('./io/tristar')
-var bmv = require('./io/bmv')
+console.log ("Begin program ...");
 
-let dbCurrent = new DbCurrent();
 
-dbCurrent.getInfo();
+// import { DbCurrent } from './db/db'
+// var tristar = require ('./io/tristar')
+// var bmv = require('./io/bmv')
 
-console.log ("Hello World");
-dbCurrent.startTimer(tristar, () => {});
+// let dbCurrent = new DbCurrent();
+
+// dbCurrent.getInfo();
+
+// console.log ("Hello World");
+// dbCurrent.startTimer(tristar, () => {});
+
+
+
+var s:string = "Hallo";
+var a = require( './i2c-test' )
+console.log("index.ts -> Start ...")
