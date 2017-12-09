@@ -26,9 +26,9 @@ async function initSAA(address) {
 
 export enum SAA_Address {
   first  = 56,
-  second = 58,
-  thrid  = 60,
-  fourth = 62
+  second = 57,
+  thrid  = 58,
+  fourth = 59
 }
 
 export const SAA_digit = [
@@ -131,6 +131,7 @@ export const SAA_ascii = [
   0b1111001 /* ASCII 69*/ /* E */,
   0b1110001 /* ASCII 70*/ /* F */,
 
+  0b0000000 /* ASCII 70*/,
   0b0000000 /* ASCII 71*/,
   0b0000000 /* ASCII 72*/,
   0b0000000 /* ASCII 73*/,
