@@ -1,0 +1,175 @@
+<script type="text/javascript">
+    RED.nodes.registerType('bmv-node',{
+        category: 'ellicore',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            serialport: {value:"/dev/ttyUSB0"},
+            mytest: {value: "volvo"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"bmv-node";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bmv-node">
+    
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-serialport"><i class="icon-tag"></i> serialport</label>
+        <input type="text" id="node-input-serialport" placeholder="serialport">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-mytest"><i class="icon-tag"></i> mytest</label>
+        <select id="node-input-mytest" >
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="bmv-node">
+    <p>Get data from Bmv</p>
+</script>
+
+
+<!-- ***************************************************************************** -->
+
+<script type="text/javascript">
+var BMV_values = {
+
+    "V": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "Battery voltage", descr: " this readout is useful to make a rough estimation of the battery’s state- of - charge.A 12 V battery is considered empty when it cannot maintain a voltage of 10.5 V under load conditions.Excessive voltage drops for a charged battery when under heavy load can also indicate that battery capacity is insufficient. " },
+    "VS": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "Starter battery voltage", descr: "this readout is useful to make a rough estimation of the starter battery’s state- of - charge."},
+    "I": { scale: function (v) { return v / 1000 }, value: 0, unit: "A", label: "Current", descr: " this represents the actual current flowing in to or out of the battery. A discharge current is indicated as a negative value (current flowing out of the battery).If for example a DC to AC inverter draws 5 A from the battery, it will be displayed as –5.0 A."},
+    "CE": { scale: function (v) { return v / 1000}, value: 0, unit: "Ah", label: "Consumend Energy", descr: " this displays the amount of Ah consumed from the battery.A fully charged battery sets this readout to 0.0 Ah  (synchronised system). If a current of 12 A is drawn from the battery for a period of 3hours, this readout will show –36.0 Ah. "},
+    "SOC": { scale: function (v) { return v / 10 }, value: 0, unit: "%", label: "State-of-charge", descr: " this is the best way to monitor the actual state of the battery. This readout represents the current amount of energy left in the battery. A fully charged battery will be indicated by a value of 100.0%. A fully discharged battery will be indicated by a value of 0.0%"},
+    "TTG": { scale: function (v) { return v / 60 }, value: 0, unit: "h", label: "Time-to-go", descr: " this is an estimation of how long the battery can support the present load until it needs recharging. "},
+    "Alarm": { scale: function (v) { return v }, value: 0, unit: "", label: "Alarm", descr: ""},
+    "Relay": { scale: function (v) { return v }, value: 0, unit: "", label: "Relay", descr: ""},
+    "AR": { scale: function (v) { return v }, value: 0, unit: "", label: "AR", descr: ""},
+    "BMV": { scale: function (v) { return v }, value: 0, unit: "", label: "Device", descr: ""},
+    "FW": { scale: function (v) { return v }, value: 0, unit: "", label: "Version", descr: "Firmware version"},
+    "H1": { scale: function (v) { return v / 1000 }, value: 0, unit: "Ah", label: "deepest discharge", descr: "The depth of the deepest discharge. This is the largest value recorded for Ah consumed . "},
+    "H2": { scale: function (v) { return v / 1000 }, value: 0, unit: "Ah", label: "last discharge", descr: "The depth of the last discharge. This is the largest value recorded for Ah consumed since the last synchronisation. "},
+    "H3": { scale: function (v) { return v / 1000 }, value: 0, unit: "Ah", label: "average discharge", descr: "The depth of the average discharge. "},
+    "H4": { scale: function (v) { return v / 100 }, value: 0, unit: "", label: "number of cycles", descr: "The number of charge cycles. A charge cycle is counted every time the sate of charge drops below 65 %, then rises above 90 % "},
+    "H5": { scale: function (v) { return v / 100 }, value: 0, unit: "", label: "number of full discharges", descr: "The number of full discharges. A full discharge is counted when the state of charge reaches 0 %. "},
+    "H6": { scale: function (v) { return v }, value: 0, unit: "Ah", label: "The cumulative number of Amp hours drawn from the battery", descr: ""},
+    "H7": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "The minimum battery voltage.", descr: ""},
+    "H8": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "The maximum battery voltage. ", descr: ""},
+    "H9": { scale: function (v) { return v / 60 / 60 / 24 }, value: 0, unit: "The number of days since the last full charge. ", label: "", descr: ""},
+    "H10": { scale: function (v) { return v }, value: 0, unit: "", label: "The number of times the BMV has automatically synchronised. ", descr: ""},
+    "H11": { scale: function (v) { return v }, value: 0, unit: "", label: "The number of low voltage alarms. ", descr: ""},
+    "H12": { scale: function (v) { return v }, value: 0, unit: "", label: "The number of high voltage alarms. ", descr: ""},
+    "H13": { scale: function (v) { return v }, value: 0, unit: "", label: "The number of low starter battery voltage alarms.", descr: ""},
+    "H14": { scale: function (v) { return v }, value: 0, unit: "", label: "The number of high starter battery voltage alarms.", descr: ""},
+    "H15": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "The minimum starter battery voltage", descr: ""},
+    "H16": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "The maximum starter battery voltage. ", descr: ""}
+
+};
+
+
+RED.nodes.registerType('bmv-node-value',{
+        category: 'ellicore',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            bmvValue: {value: "SOC"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"bmv-node-value";
+        },
+        oneditprepare: function() {
+            var node = this; 
+            console.log("oneditprepare --->");
+            for (var name in BMV_values) {
+                if (BMV_values.hasOwnProperty(name)) {
+                    console.log("name");
+                    $('#node-input-bmvValue').append('<option value="' + name + '" title="' + BMV_values[name].descr + '">' + name + ' - ' + '(' + BMV_values[name].unit  +')   ' + BMV_values[name].label + '</option>');
+                }
+            }    
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bmv-node-value">
+    
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-bmvValue"><i class="icon-tag"></i> bmvValue</label>
+        <select id="node-input-bmvValue" >
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="bmv-node-value">
+    <p>Get a value from Bmv</p>
+</script>
+
+
+<!-- ***************************************************************************** -->
+
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('mk2-node',{
+        category: 'ellicore',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            serialport: {value:"/dev/ttyUSB0"},
+            mytest: {value: "volvo"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"mk2-node";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mk2-node">
+    
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-serialport"><i class="icon-tag"></i> serialport</label>
+        <input type="text" id="node-input-serialport" placeholder="serialport">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-mytest"><i class="icon-tag"></i> mytest</label>
+        <select id="node-input-mytest" >
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mk2-node">
+    <p>Get data from mk2</p>
+</script>
