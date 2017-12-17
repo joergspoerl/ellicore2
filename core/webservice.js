@@ -4,7 +4,7 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 
-var bmv = require("../io/bmv.js");
+var bmv = require("../io/bmv");
 //var tristar = require("../io/tristar.js");
 
 //app.get('/index.html', function (req, res) {

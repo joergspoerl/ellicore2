@@ -62,16 +62,18 @@ raspiInit (async ()=> {
 
 
     async function counter (display:SAA1064) {
-        for (let i = 0; i < 9999; i++) {
-            display.write(i.toString());
-            await sleep(10);
+        while(true) {
+            for (let i = 0; i < 9999; i++) {
+                display.write(i.toString());
+                await sleep(10);
+            }
         }
     }
 
     async function showArray (display:SAA1064) {
         let array = [
-            "abcd",
-            "ef00",
+            "  1.00",
+            "e.f.0.0",
             "ABCD",
             "ef  ",
             "0000",
@@ -109,20 +111,20 @@ raspiInit (async ()=> {
     }
 
     async function scroll (display:SAA1064) {
-        let longString: string = "abc    def    012345   67890  abcdef        012 34  567890  abcdef   01234567890  ";
+        let longString: string = "a.b.c.    .def.    0.12345   678.90  ..a.bc.def        0.12 3.4  567.890  ..abcdef   01.2345678.90  ";
         while(true) {
             for (let i = 0; i<longString.length;i++) {
-                display.write(longString.substring(i,i+4));
+                display.write(longString.substring(i,i+8));
                 await sleep(500);
             }
         }
     }
 
-    let task1 = counter(new SAA1064(i2c, SAA_Address.first));
-    let task2 = showArray(new SAA1064(i2c, SAA_Address.second));
-    let task3 = scroll(new SAA1064(i2c, SAA_Address.thrid));
-    let task4 = scroll(new SAA1064(i2c, SAA_Address.fourth));
+    //let task1 = counter(new SAA1064(i2c, SAA_Address.first));
+     let task2 = showArray(new SAA1064(i2c, SAA_Address.second));
+     //let task3 = scroll(new SAA1064(i2c, SAA_Address.thrid));
+    // let task4 = scroll(new SAA1064(i2c, SAA_Address.fourth));
     
-    let r = Promise.all([task1,task2,task3,task4]);
+    //let r = Promise.all([task1,task2,task3,task4]);
 })
 

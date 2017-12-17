@@ -220,8 +220,29 @@ export class SAA1064 {
 
   write (str:string) {
     let a = str.padStart(4, " ");
-    for (let i = 0;i<4; i++) {
-      this.ziffer (i+1, SAA_ascii[a.charCodeAt(i)])
+    //let b = str.padEnd(4, " ")
+    let characters = a.split('');
+    let digitNumber = 1;
+    let currentChar:any = "";
+
+    // console.log("a:", a);    
+    // console.log("a:", a);    
+    // console.log("characters:", characters);
+
+    while (digitNumber <= 4 ){
+      currentChar = characters.shift();
+      while (currentChar == ".") {
+        currentChar = characters.shift()
+      }
+      // console.log("currentChar:", currentChar);
+      // console.log("digitNumber:", digitNumber);
+      if (characters[0] == ".") {
+        //characters.shift();
+        this.ziffer (digitNumber, SAA_ascii[currentChar.charCodeAt(0)] + 0b10000000)
+      } else {
+        this.ziffer (digitNumber, SAA_ascii[currentChar.charCodeAt(0)])
+      }
+      digitNumber++
     }
   }
 }

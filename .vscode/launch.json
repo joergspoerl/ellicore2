@@ -7,19 +7,25 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nodemon",
-            "runtimeExecutable": "nodemon",
-            "program": "${workspaceFolder}/app.js",
+            "name": "remote nodemon",
+            "runtimeExecutable": "/Users/jorgsporl/pi/home/pi/dev/ellicore2/startRaspiNode.sh",
+            "program": "",
             "restart": true,
             "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "internalConsoleOptions": "neverOpen",
+            "timeout": 60000,
+            "address": "192.168.1.10",
+            "port": 9229,
+            "sourceMaps": true
         },
-    {
-        "type": "node",
-        "request": "attach",
-        "name": "Attach",
-        "port": 9229
-    },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "address": "192.168.1.10",
+            "port": 9229,
+            "sourceMaps": true
+        },
         {
             "type": "node",
             "request": "launch",

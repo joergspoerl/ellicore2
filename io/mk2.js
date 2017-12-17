@@ -1,7 +1,6 @@
 ﻿var SerialPort = require('serialport');
 var bufferpack = require('bufferpack');
 
-
 // Modul Variablen
 
 var frameBuffer = new Buffer('');
