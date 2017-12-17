@@ -22,7 +22,7 @@
     "raspi": "^5.0.2",
     "raspi-gpio": "^5.0.0",
     "raspi-i2c": "^6.1.0",
-    "serialport": "^4.0.7",
+    "serialport": "^6.0.4",
     "wmi-client": "^0.3.0"
   },
   "devDependencies": {

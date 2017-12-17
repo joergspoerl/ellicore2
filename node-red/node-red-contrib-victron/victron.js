@@ -1,5 +1,5 @@
 var SerialPort = require('serialport');
-var Victron_mk2 = require('../../io/mk2-new')
+var Victron_mk2 = require('../../io/victron_mk2')
 
 // Modul Variablen
 var BMV_values = {
