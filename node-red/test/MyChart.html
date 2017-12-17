@@ -1,0 +1,57 @@
+<!-- <div ng-bind-html="msg.payload.Newds_current_bps" ng-if="false"></div> -->
+<script src="https://cdnjs.com/libraries/Chart.js"></script>
+<canvas id="myChart" width="300" height="300"></canvas>
+<script>
+
+    (function (scope) {
+        var timer = setTimeout(function () { //check that the Morris libs are loaded, if not wait
+            //if (!window.Morris) return;
+            //clearInterval(timer);
+
+            var chartData = {
+                type: 'line',
+                data: {
+                    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"],
+                    datasets: [ {
+                        data: []
+                    }]
+                },
+                options: {
+                    animation: {
+                        duration: 0
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                zeroLineColor: "black",
+                                zeroLineWidth: 2
+                            },
+                            ticks: {
+                                min: 0,
+                                max: 200000,
+                                stepSize: 10000
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: "B/s"
+                            }
+                        }],
+                    }
+
+                }
+            }
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, chartData);
+
+            scope.$watch('msg', function (msg) { //watch for an incoming NR msg
+                if (msg) {
+
+                    chartData.data.datasets = msg.payload;
+                    myChart.update();
+                }
+            }); //close out the watch 
+
+        }, 100); // close out the setInterval 
+    })(scope);
+
+</script>
