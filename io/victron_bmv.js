@@ -83,7 +83,7 @@ function victron_bmv(serialport) {
 
             for (var i = 0; i < lines.length - 2; i++) {
                 let line = lines[i].split('\t');
-                self.data[line[0]].value = selfdata[line[0]].scale(line[1]);
+                self.data[line[0]].value = self.data[line[0]].scale(line[1]);
             }
         }
     }
@@ -118,4 +118,16 @@ function victron_bmv(serialport) {
     this.open(serialport)
 }
 
-var bmv = new victron_bmv("/dev/ttyUSB0")
+
+
+
+function test () {
+    var bmv = new victron_bmv("/dev/ttyUSB0");
+
+    setInterval (() => {
+        console.log(bmv.data.V.value)
+    },10000)
+}
+
+
+module.exports = victron_mk2;
