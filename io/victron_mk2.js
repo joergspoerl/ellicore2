@@ -4,7 +4,7 @@ var bp = require('bufferpack');
 // Modul Variablen
 
 function victron_mk2 () {
-    var debug_log = true;
+    var debug_log = false;
     var in_buf = new Buffer('');  // input buffer
     var recive = function() {};   // common callback pointer
     var mk2 = { data: {}};        // data container
@@ -83,7 +83,7 @@ function victron_mk2 () {
         try {
             port.write(buffer);          // send data
         } catch (exception) {
-            console.log("mk2 canon write on serial ! ", exception)
+            console.log("mk2 can't write on serial ! ", exception)
         }
     }
     

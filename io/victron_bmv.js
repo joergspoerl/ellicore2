@@ -6,7 +6,7 @@ function victron_bmv(serialport) {
     var self  = this;           // reference to itself
 
     // data structure
-    this.data = {
+    self.data = {
 
         "V": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "Battery voltage", descr: " this readout is useful to make a rough estimation of the battery’s state- of - charge.A 12 V battery is considered empty when it cannot maintain a voltage of 10.5 V under load conditions.Excessive voltage drops for a charged battery when under heavy load can also indicate that battery capacity is insufficient. " },
         "VS": { scale: function (v) { return v / 1000 }, value: 0, unit: "V", label: "Starter battery voltage", descr: "this readout is useful to make a rough estimation of the starter battery’s state- of - charge." },
@@ -120,14 +120,4 @@ function victron_bmv(serialport) {
 
 
 
-
-function test () {
-    var bmv = new victron_bmv("/dev/ttyUSB0");
-
-    setInterval (() => {
-        console.log(bmv.data.V.value)
-    },10000)
-}
-
-
-module.exports = victron_mk2;
+module.exports = victron_bmv;

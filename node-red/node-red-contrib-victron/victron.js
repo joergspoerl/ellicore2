@@ -36,9 +36,8 @@ module.exports = function(RED) {
         var node = this;
         var globalContext = this.context().global;
         
-        var bmv = globalContext.get("victron_bmv")
-
         node.on('input', function(msg) {
+            var bmv = globalContext.get("victron_bmv")
             msg.payload = bmv.data[config.bmvValue].value;
             msg.unit    = bmv.data[config.bmvValue].unit;
             msg.label   = bmv.data[config.bmvValue].label;
