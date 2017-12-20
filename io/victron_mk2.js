@@ -139,7 +139,7 @@ function victron_mk2 () {
     
     var led_status = function () {
         communicate (create_frame("L", ""), (frame) => {
-            console.log("LED Frame")
+            //console.log("LED Frame")
             var led_status = frame[3];
             var led_blink  = frame[4];
         
@@ -153,7 +153,7 @@ function victron_mk2 () {
                 'low bat': ((led_status & 64) > 0 ? ((led_blink & 64) > 0 ? 'blink' : 'on') : 'off'),
                 'temp': ((led_status & 128) > 0 ? ((led_blink & 128) > 0 ? 'blink' : 'on') : 'off'),
             }
-            console.log (mk2.data.led);
+            //console.log (mk2.data.led);
         
         });
     }
@@ -264,11 +264,11 @@ function victron_mk2 () {
             var ibat = bp.unpack('<i', ibat_buf);
             var cbat = bp.unpack('<i', cbat_buf);
             var finv = bp.unpack('<B', frame, 15);
-            console.log("finv", finv, bp.unpack('B', frame, 15), frame[15])
+            //console.log("finv", finv, bp.unpack('B', frame, 15), frame[15])
     
             mk2.data.ubat = (ubat+ubat_offset) * scale(ubat_scale);
-            mk2.data.ibat = (ibat+ibat_offset) * scale(ibat_scale);
-            mk2.data.cbat = (cbat+ibat_offset) * scale(ibat_scale);
+            mk2.data.ibat = (ibat+ibat_offset) * scale(ibat_scale) / 10;
+            mk2.data.cbat = (cbat+ibat_offset) * scale(ibat_scale) / 10;
             mk2.data.finv = 10 / ((finv+finv_offset) * scale(finv_scale)); 
             
             frame_debug("dc_info:", frame, {ubat: mk2.data.ubat, ibat: mk2.data.ibat, cbat: mk2.data.cbat, finv:mk2.data.finv })
@@ -337,7 +337,7 @@ function victron_mk2 () {
         communicate (create_frame("W", "\x0E\x00\x00"), (frame) => {
             var data = bp.unpack('<B B', frame, 4) 
             var state = "" + data[0] + data[1];
-            console.log("state", state, "data", data)
+            //console.log("state", state, "data", data)
             mk2.data.state = states[state];
             frame_debug("get_state", frame, {state: mk2.data.state});
         })
