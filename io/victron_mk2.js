@@ -356,6 +356,7 @@ function victron_mk2 () {
     }
     this.set_assist = set_assist;
     
+    this.hello = (a, b) => { return a + " <Hello World> " + b }
     
     var wait = 800
     async function run () {

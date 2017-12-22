@@ -1,0 +1,1 @@
+curl -w "@curl-format.txt" http://192.168.1.10:8081/mk2/umains_scale_load/

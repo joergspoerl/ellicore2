@@ -7,7 +7,7 @@ var fs = require("fs");
 var victron_bmv = require("../io/victron_bmv");
 var bmv = new victron_bmv("/dev/ttyUSB0")
 
-var victron_mk2 = require("../io/victron_mk2");
+var victron_mk2 = require("../io/victron_mk2.v2");
 var mk2 = new victron_mk2("/dev/ttyUSB1")
 
 //var bmv = require("../io/bmv");
@@ -30,9 +30,26 @@ app.get('/bmv', function (req, res) {
 app.get('/mk2', function (req, res) {
     res.end(JSON.stringify(mk2.data));
 })
-app.get('/mk2/set_assist/:value', function (req, res) {
-    res.end( mk2.set_assist(req.params.value) );
+// app.get('/mk2/set_assist/:value', function (req, res) {
+//     res.end( mk2.set_assist(req.params.value) );
+// })
+app.get('/mk2/object', function (req, res) {
+    res.end(JSON.stringify(mk2));
 })
+
+
+app.get('/mk2/:function_name/*', function (req, res) {
+    var params = req.params[0].split('/');
+    console.log("params: ", params)
+    mk2[req.params.function_name].apply(null, params).then(
+        (result) => {
+            res.end( JSON.stringify(result) );
+        },
+        (error)  => {
+            res.end( JSON.stringify(error) );
+        })
+})
+
 
 // app.get('/tristar', function (req, res) {
 //     var tristarData = tristar();
