@@ -38,7 +38,7 @@ app.get('/mk2/object', function (req, res) {
 })
 
 
-app.get('/api/v1/mk2/:function_name/*', function (req, res) {
+app.get('/mk2/:function_name/*', function (req, res) {
     console.log("req.query.value: ", req.query.value)
     var params = req.params[0].split('/');
     console.log("params: ", params)

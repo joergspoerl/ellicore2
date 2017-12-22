@@ -9,13 +9,15 @@ const mk2_emitter = new Mk2_emitter();
 // Modul Variablen
 
 function victron_mk2 () {
+    console.log("new instant 'victron_mk2'")
     var self = this;
     var debug_log = false;
     var in_buf = new Buffer('');  // input buffer
     var recive         = () => {};   // common callback pointer
     var recive_resolve = () => {}
-    var data;        // data container
-    this.test = { name: "abc"}
+    self.data = {};        // data container
+    self.calc = {};        // calc container scaling and offset
+    self.test = { name: "abc"}
     
     //self.data = mk2.data;
     self.close = function () {
@@ -40,7 +42,8 @@ function victron_mk2 () {
                 "brk": false,
             })
             setTimeout(() => {
-                run();
+                //run();
+                self.start();
             },500)
         } else {
             // ERROR
@@ -130,7 +133,7 @@ function victron_mk2 () {
                     // if checksum ok and no version frame
                     try {
                         var result = recive (frame)
-                        console.log("result", result)
+                        //console.log("result", result)
                         //frame_debug(result.name, frame, result)
                         recive_resolve(result)    // callback
                         recive = () => { console.log ("Clear callback pointer")} // clear common callback    
@@ -159,8 +162,9 @@ function victron_mk2 () {
         return communicate (create_frame("A", "\x01\x00"), (frame) => {
             console.log("A",frame);
             return {
-                name: 'start',
-                content: "A"
+                start: {
+                    content: "A"
+                }
             }
         })
     }
@@ -171,103 +175,113 @@ function victron_mk2 () {
             var led_blink  = frame[4];
         
             return {
-                'name': 'led_status',
-                'mains': ((led_status & 1) > 0 ? ((led_blink & 1) > 0 ? 'blink' : 'on') : 'off'),
-                'absorption': ((led_status & 2) > 0 ? ((led_blink & 2) > 0 ? 'blink' : 'on') : 'off'),
-                'bulk': ((led_status & 4) > 0 ? ((led_blink & 4) > 0 ? 'blink' : 'on') : 'off'),
-                'float': ((led_status & 8) > 0 ? ((led_blink & 8) > 0 ? 'blink' : 'on') : 'off'),
-                'inverter': ((led_status & 16) > 0 ? ((led_blink & 16) > 0 ? 'blink' : 'on') : 'off'),
-                'overload': ((led_status & 32) > 0 ? ((led_blink & 32) > 0 ? 'blink' : 'on') : 'off'),
-                'low bat': ((led_status & 64) > 0 ? ((led_blink & 64) > 0 ? 'blink' : 'on') : 'off'),
-                'temp': ((led_status & 128) > 0 ? ((led_blink & 128) > 0 ? 'blink' : 'on') : 'off'),
+                led_status: {
+                    'mains': ((led_status & 1) > 0 ? ((led_blink & 1) > 0 ? 'blink' : 'on') : 'off'),
+                    'absorption': ((led_status & 2) > 0 ? ((led_blink & 2) > 0 ? 'blink' : 'on') : 'off'),
+                    'bulk': ((led_status & 4) > 0 ? ((led_blink & 4) > 0 ? 'blink' : 'on') : 'off'),
+                    'float': ((led_status & 8) > 0 ? ((led_blink & 8) > 0 ? 'blink' : 'on') : 'off'),
+                    'inverter': ((led_status & 16) > 0 ? ((led_blink & 16) > 0 ? 'blink' : 'on') : 'off'),
+                    'overload': ((led_status & 32) > 0 ? ((led_blink & 32) > 0 ? 'blink' : 'on') : 'off'),
+                    'low bat': ((led_status & 64) > 0 ? ((led_blink & 64) > 0 ? 'blink' : 'on') : 'off'),
+                    'temp': ((led_status & 128) > 0 ? ((led_blink & 128) > 0 ? 'blink' : 'on') : 'off'),
+                }
             }
         });
     }
     
-    this.umains_scale_load = async function() {
+    this.umains_calc_load = async function() {
         return communicate (create_frame("W", "\x36\x00\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
-            return { 
-                name: "umains_scale_load",
-                umains_scale:  data[0], 
-                umains_offset: data[2]
-            }
-        });
-    }
-    
-    this.imains_scale_load = async function() {
-        return communicate (create_frame("W", "\x36\x01\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
-            return { 
-                name: "imains_scale_load",
-                imains_scale:  data[0], 
-                imains_offset: data[2]
-            }
-        });
-    }
-    
-    this.uinv_scale_load = async function() {
-        return communicate (create_frame("W", "\x36\x02\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
-            return { 
-                name: "uinv_scale_load",
-                uinv_scale:  data[0], 
-                uinv_offset: data[2]
-            }
-        });
-    }
-    
-    this.iinv_scale_load = async function() {
-        return communicate (create_frame("W", "\x36\x03\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
-            return { 
-                name: "iinv_scale_load",
-                iinv_scale:  data[0], 
-                iinv_offset: data[2]
-            }
-        });
-    }
-    
-    this.ubat_scale_load = async function() {
-        return communicate (create_frame("W", "\x36\x04\x00"), (frame) => {
             var data = bp.unpack('<h B h', frame, 4)
             return { 
-                name: "ubat_scale_load",
-                ubat_scale:  data[0], 
-                ubat_offset: data[2]
+                umains_calc: {
+                    scale:  data[0], 
+                    offset: data[2]
+                }
             }
         });
     }
     
-    this.ibat_scale_load = async function() {
+    this.imains_calc_load = async function() {
+        return communicate (create_frame("W", "\x36\x01\x00"), (frame) => {
+            var data = bp.unpack('<h B h', frame, 4)
+            return {
+                imains_calc: { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
+            }
+        });
+    }
+    
+    this.uinv_calc_load = async function() {
+        return communicate (create_frame("W", "\x36\x02\x00"), (frame) => {
+            var data = bp.unpack('<h B h', frame, 4)
+            return {
+                uinv_calc: { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
+            }
+        });
+    }
+    
+    this.iinv_calc_load = async function() {
+        return communicate (create_frame("W", "\x36\x03\x00"), (frame) => {
+            var data = bp.unpack('<h B h', frame, 4)
+            return {
+                iinv_calc: { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
+            }
+        });
+    }
+    
+    this.ubat_calc_load = async function() {
+        return communicate (create_frame("W", "\x36\x04\x00"), (frame) => {
+            var data = bp.unpack('<h B h', frame, 4)
+            return {
+                ubat_calc:
+                { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
+            }
+        });
+    }
+    
+    this.ibat_calc_load = async function() {
         return communicate (create_frame("W", "\x36\x05\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
-            return { 
-                name: "ibat_scale_load",
-                ibat_scale:  data[0], 
-                ibat_offset: data[2]
+            var data = bp.unpack('<h B h', frame, 4)
+            return {
+                ibat_calc: { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
             }
         });
     }
     
-    this.finv_scale_load = async function() {
+    this.finv_calc_load = async function() {
         return communicate (create_frame("W", "\x36\x07\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
+            var data = bp.unpack('<h B h', frame, 4)
             return { 
-                name: "finv_scale_load",
-                finv_scale:  data[0], 
-                finv_offset: data[2]
+                finv_calc: { 
+                    scale:  data[0], 
+                    offset: data[2]
+                }
             }
         });
     }
     
-    this.fmains_scale_load = async function() {
+    this.fmains_calc_load = async function() {
         return communicate (create_frame("W", "\x36\x08\x00"), (frame) => {
-            var data    = bp.unpack('<h B h', frame, 4)
+            var data = bp.unpack('<h B h', frame, 4)
             return { 
-                name: "fmains_scale_load",
-                fmains_scale: data[0], 
-                fmains_offset: data[2]
+                fmains_calc: { 
+                    scale: data[0], 
+                    offset: data[2]
+                }
             }
         });
     }
@@ -282,9 +296,9 @@ function victron_mk2 () {
     
     
     this.dc_info = async function() {
-        if (!self.ubat_calc) self.ubat_calc = await self.ubat_scale_load(); 
-        if (!self.ibat_calc) self.ibat_calc = await self.ibat_scale_load(); 
-        if (!self.finv_calc) self.finv_calc = await self.finv_scale_load(); 
+        if (!self.calc.ubat_calc) Object.assign(self.calc, await self.ubat_calc_load()); 
+        if (!self.calc.ibat_calc) Object.assign(self.calc, await self.ibat_calc_load()); 
+        if (!self.calc.finv_calc) Object.assign(self.calc, await self.finv_calc_load()); 
         
         return communicate (create_frame("F", "\x00"), async (frame) => {
             var ubat = bp.unpack('<H', frame, 7);
@@ -296,38 +310,40 @@ function victron_mk2 () {
             var finv = bp.unpack('<B', frame, 15);
             
             return {
-                name: "dc_info",
-                ubat: ((ubat+self.ubat_calc.ubat_offset) * scale(self.ubat_calc.ubat_scale) / 10).toFixed(2), 
-                ibat: ((ibat+self.ibat_calc.ibat_offset) * scale(self.ibat_calc.ibat_scale) / 10).toFixed(2), 
-                cbat: ((cbat+self.ibat_calc.ibat_offset) * scale(self.ibat_calc.ibat_scale) / 10).toFixed(2), 
-                finv: (10 / ((finv+self.finv_calc.finv_offset) * scale(self.finv_calc.finv_scale))).toFixed(2)
+                dc_info: {
+                    ubat: ((ubat+self.calc.ubat_calc.offset) * scale(self.calc.ubat_calc.scale) / 10).toFixed(2), 
+                    ibat: ((ibat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10).toFixed(2), 
+                    cbat: ((cbat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10).toFixed(2), 
+                    finv: (10 / ((finv+self.calc.finv_calc.offset) * scale(self.calc.finv_calc.scale))).toFixed(2)
+                }
             }
         });
     }
     
     this.ac_info = async function() {
-        if (!self.umains_calc) self.umains_calc = await self.umains_scale_load(); 
-        if (!self.imains_calc) self.imains_calc = await self.imains_scale_load(); 
-        if (!self.uinv_calc) self.uinv_calc = await self.uinv_scale_load(); 
-        if (!self.iinv_calc) self.iinv_calc = await self.iinv_scale_load(); 
-        if (!self.fmains_calc) self.fmains_calc = await self.fmains_scale_load(); 
+        if (!self.calc.umains_calc) Object.assign(self.calc, await self.umains_calc_load()); 
+        if (!self.calc.imains_calc) Object.assign(self.calc, await self.imains_calc_load()); 
+        if (!self.calc.uinv_calc)   Object.assign(self.calc, await self.uinv_calc_load()); 
+        if (!self.calc.iinv_calc)   Object.assign(self.calc, await self.iinv_calc_load()); 
+        if (!self.calc.fmains_calc) Object.assign(self.calc, await self.fmains_calc_load()); 
 
         return communicate (create_frame("F", "\x01"), (frame) => {
     
-            var data = bp.unpack ("<H h H h B", frame, 7)
+            var data   = bp.unpack ("<H h H h B", frame, 7)
             var umains = data[0];
             var imains = data[1];
             var uinv   = data[2];
             var iinv   = data[3];
             var fmains = data[4] 
     
-            return { 
-                name:   "ac_info",
-                umains: ((umains+self.umains_calc.umains_offset) * scale(self.umains_calc.umains_scale)).toFixed(1), 
-                imains: ((imains+self.imains_calc.imains_offset) * scale(self.imains_calc.imains_scale)).toFixed(1), 
-                uinv:   ((uinv+self.uinv_calc.uinv_offset) * scale(self.uinv_calc.uinv_scale)).toFixed(1), 
-                iinv:   ((iinv+self.iinv_calc.iinv_offset) * scale(self.iinv_calc.iinv_scale)).toFixed(1), 
-                fmains: (10 / ((fmains + self.fmains_calc.fmains_offset) * scale(self.fmains_calc.fmains_scale))).toFixed(1) 
+            return {
+                ac_info: { 
+                    umains: ((umains+self.calc.umains_calc.offset) * scale(self.calc.umains_calc.scale)).toFixed(1), 
+                    imains: ((imains+self.calc.imains_calc.offset) * scale(self.calc.imains_calc.scale)).toFixed(1), 
+                    uinv:   ((uinv+self.calc.uinv_calc.offset) * scale(self.calc.uinv_calc.scale)).toFixed(1), 
+                    iinv:   ((iinv+self.calc.iinv_calc.offset) * scale(self.calc.iinv_calc.scale)).toFixed(1), 
+                    fmains: (10 / ((fmains + self.calc.fmains_calc.offset) * scale(self.calc.fmains_calc.scale))).toFixed(1) 
+                }
             }
         });
     }
@@ -371,9 +387,10 @@ function victron_mk2 () {
             var data = bp.unpack('<B B', frame, 4) 
             var state = "" + data[0] + data[1];
             return {
-                name:  "get_state",
-                state: states[state]
-            };
+                get_state: {
+                    state: states[state]
+                }
+            }
         })
     }
     
@@ -386,96 +403,44 @@ function victron_mk2 () {
         
         return communicate (create_frame("S", data), (frame) => {
             return {
-                name:     "set_assist",
-                setlimit: ampere
+                set_assist: {
+                    setlimit: ampere
+                }
             }
         })
     }
-    
-    
-    
-    var wait = 800
-    async function run () {
-//        await self.start()
-//        await sleep(1000)
-        
-//        await self.led_status();
-        // await sleep(2000)
-        // await self.umains_scale_load()
-        // // await sleep(wait)
-    
-        // await self.imains_scale_load()
-        // // await sleep(wait)
-    
-        // await self.uinv_scale_load()
-        // // await sleep(wait)
-    
-        // await self.iinv_scale_load()
-        // // await sleep(wait)
-    
-        // await self.ubat_scale_load()
-        // // await sleep(wait)
-    
-        // await self.ibat_scale_load()
-        // // await sleep(wait)
-    
-        // await self.fmains_scale_load()
-        // // await sleep(wait)
-    
-        // await self.finv_scale_load()
-        // // await sleep(wait)
-    
-    
-        while (false) {
-        //     // set_assist(16);
-        //     // await sleep(wait)
-    
-        //     await self.master_multi_led_info()
-        //     // await sleep(wait)
 
-        try {
-            //var result = await self.start()
-            //console.log("result: ", result)
+    this.get_data = async function () {
+        return self.data
+    }
 
-            //var result = await self.led_status()
-            //console.log("result: ", result)
-                        
-            var result = await self.umains_scale_load()
-            console.log("result: ", result)
+    this.running = {};
+    this.start = async function () {
+        this.running = setInterval (async () => {
+            //console.log("Start loop", this.data)
+            self.data.dc_info = await self.dc_info();
+            Object.assign(self.data, await self.dc_info()); 
+            Object.assign(self.data, await self.ac_info()); 
+        }, 1000)
+    }
 
-        } catch (exception) {
-            console.log("Exception: ", exception)
-        }
-
-
-            // await sleep(wait)
-
-        //     await self.get_state()
-        //     // await sleep(wait)
-    
-        //     await self.dc_info();
-        //     // await sleep(wait)
-    
-        //     await self.ac_info();
-        //     // await sleep(wait)
-    
-        //     await sleep(10000)
-        }
-        
+    this.stop = async function () {
+        Interval.Clear (self.running);
     }
 
     return self
-    
 }
 
 
 
 // test
-if (true) {
+if (false) {
     var a = new victron_mk2()
-    
+    var b = new victron_mk2()
+
     setInterval(() => {
-        //console.log("#####", a.data);
+        console.log("#####", a.data);
+        console.log("#####", b.data);
     }, 1000)    
 }
 
