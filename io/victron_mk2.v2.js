@@ -418,13 +418,18 @@ function victron_mk2 () {
         return self.data
     }
 
-    this.running = {};
+    
     this.start = async function () {
         this.running = setInterval (async () => {
-            Object.assign(self.data, await self.dc_info()); 
-            Object.assign(self.data, await self.ac_info()); 
-            Object.assign(self.data, await self.led_status()); 
-            Object.assign(self.data, await self.get_state()); 
+            try {
+                Object.assign(self.data, await self.dc_info()); 
+                Object.assign(self.data, await self.ac_info()); 
+                Object.assign(self.data, await self.led_status()); 
+                Object.assign(self.data, await self.get_state()); 
+            } 
+            catch (exception ){
+                console.log("Exception in mk2 start(): ", exception)
+            }
         }, 1000)
     }
 
