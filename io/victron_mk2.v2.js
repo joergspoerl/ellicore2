@@ -16,6 +16,7 @@ function victron_mk2 () {
     var in_buf = new Buffer('');     // input buffer
     var recive         = () => {};   // common callback pointer
     var recive_resolve = () => {};   // common promise resolve pointer
+
     self.data = {};                  // data container
     self.calc = {};                  // calc container scaling and offset
     self.meta = {                    // meta data
@@ -422,6 +423,8 @@ function victron_mk2 () {
         this.running = setInterval (async () => {
             Object.assign(self.data, await self.dc_info()); 
             Object.assign(self.data, await self.ac_info()); 
+            Object.assign(self.data, await self.led_status()); 
+            Object.assign(self.data, await self.get_state()); 
         }, 1000)
     }
 
