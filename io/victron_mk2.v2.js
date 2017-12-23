@@ -4,20 +4,23 @@ var bp = require('bufferpack');
 const EventEmitter = require('events');
 class Mk2_emitter extends EventEmitter {}
 const mk2_emitter = new Mk2_emitter();
-
   
-// Modul Variablen
+// victron_mk2 object
+//   encode & decode mk2 protocol over serial line
+//   io interface for ellicode project
 
 function victron_mk2 () {
     console.log("new instant 'victron_mk2'")
     var self = this;
     var debug_log = false;
-    var in_buf = new Buffer('');  // input buffer
+    var in_buf = new Buffer('');     // input buffer
     var recive         = () => {};   // common callback pointer
-    var recive_resolve = () => {}
-    self.data = {};        // data container
-    self.calc = {};        // calc container scaling and offset
-    self.test = { name: "abc"}
+    var recive_resolve = () => {};   // common promise resolve pointer
+    self.data = {};                  // data container
+    self.calc = {};                  // calc container scaling and offset
+    self.meta = {                    // meta data
+        info: "data from victron mk2"
+    }
     
     //self.data = mk2.data;
     self.close = function () {
@@ -417,8 +420,6 @@ function victron_mk2 () {
     this.running = {};
     this.start = async function () {
         this.running = setInterval (async () => {
-            //console.log("Start loop", this.data)
-            self.data.dc_info = await self.dc_info();
             Object.assign(self.data, await self.dc_info()); 
             Object.assign(self.data, await self.ac_info()); 
         }, 1000)
@@ -430,22 +431,6 @@ function victron_mk2 () {
 
     return self
 }
-
-
-
-// test
-if (false) {
-    var a = new victron_mk2()
-    var b = new victron_mk2()
-
-    setInterval(() => {
-        console.log("#####", a.data);
-        console.log("#####", b.data);
-    }, 1000)    
-}
-
-
-
 
 
 module.exports = victron_mk2;
