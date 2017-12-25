@@ -22,8 +22,8 @@ function saa1064 (i2c, address) {
     
 
     self.set_register =  (register, value) => {
-        self.i2c.writeByteSync(self.address, Number.parseInt(register), Number.parseInt(value));
         return new Promise ((resolve, reject) => {
+            self.i2c.writeByteSync(self.address, Number.parseInt(register), Number.parseInt(value));
             resolve({
                 register:  Number.parseInt(register),
                 value:     Number.parseInt(value)
