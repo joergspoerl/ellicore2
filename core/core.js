@@ -15,9 +15,9 @@ const saa1064 = require("../io/saa1064");
 
 var manager = {
     devices: {
-        bmv: bmv,
-        mk2: mk2,
-        mppt: mppt,
+        bmv:   bmv,
+        mk2:   mk2,
+        mppt:  mppt,
         disp1: {},
         disp2: {},
         disp3: {},
