@@ -51,6 +51,60 @@ function tristar_mppt() {
 
     })
 
+    self.meta = {
+
+        adc: {
+            // Filtered ADC
+            adc_vb_f_med:    { descr: 'Battery voltage, filtered',       unit: 'V' },
+            adc_vbterm_f:    { descr: 'Batt.Terminal voltage, filtered', unit: 'V' },
+            adc_vbs_f:       { descr: 'Battery Sense voltage, filtered', unit: 'V' },
+            adc_va_f:        { descr: "Array voltage, filtered",         unit: "V" },
+            adc_ib_f_shadow: { descr: "Battery current, filtered",       unit: "V" },
+            adc_ia_f_shadow: { descr: "Array current, filtered",         unit: "A" },
+            adc_p12_f:       { descr: "12 volt supply, filtered",        unit: "V" },
+            adc_p3_f:        { descr: "3 volt supply, filtered",         unit: "V" },
+            adc_pmeter_f:    { descr: "MeterBus voltage, filtered",      unit: "V" },
+            adc_p18_f:       { descr: "1.8 volt supply, filtered",       unit: "V" },
+            adc_v_ref:       { descr: "reference voltage",               unit: "V" }
+        },
+
+        temp: {
+            // Temperatures
+            T_hs:   { decr: "Heatsink temperature C √ -127 to + 127",                 unit: "°C" },
+            T_rts:  { decr: "RTS temperature (0x80 = disconnect)  C √ -127 to + 127", unit: "°C" },
+            T_batt: { decr: "Battery regulation temperature C √ -127 to + 127",       unit: "°C" },
+        },
+
+        batt: {
+            // battery sense voltage, filtered
+            battsV:       { decr: "Battery voltage",         unit: "V" },
+            battsSensedV: { decr: "Battery sensed voltage",  unit: "V" },
+            battsI:       { decr: "Battery charge current",  unit: "A" },
+            arrayV:       { decr: "Array voltage",           unit: "V" },
+            arrayI:       { decr: "Array current",           unit: "A" },
+            statenum:     { decr: "State number",            unit: ""  },
+            hsTemp:       { decr: "hs temperature",          unit: "°C"},
+            rtsTemp:      { decr: "rts temperature",         unit: "°C"},
+            outPower:     { decr: "Output power",            unit: "W" },
+            inPower:      { decr: "Input power",             unit: "W" },
+        },
+
+        today: {
+            // Logger – Today’s values
+            vb_min_daily:   { decr: "battery minimal voltage",   unit: "V"  },
+            vb_max_daily:   { decr: "battery maximal voltage",   unit: "V"  },
+            va_max_daily:   { decr: "battery maximal current",   unit: "A"  },
+            Ahc_daily:      { decr: "Amper hours",               unit: "Ah" },
+            whc_daily:      { decr: "watt hours",                unit: "Wh" },
+            flags_daily:    { decr: "flags",                     unit: ""   },
+            Pout_max_daily: { decr: "max power output",          unit: "W"  },
+            Tb_min_daily:   { decr: "min",                       unit: ""   },
+            Tb_max_daily:   { decr: "max",                       unit: ""   },
+            fault_daily:    { decr: "fault",                     unit: "W"  },
+        }
+
+    }
+
 
     function readTristar(hr) {
 
@@ -70,23 +124,6 @@ function tristar_mppt() {
         var p_scale = V_PU * I_PU * Math.pow(2, -17);
 
 
-        self.meta = {
-
-            adc: {
-                // Filtered ADC
-                adc_vb_f_med: { descr: 'Battery voltage, filtered', unit: 'V' },
-                adc_vbterm_f: { descr: 'Batt.Terminal voltage, filtered', unit: 'V' },
-                adc_vbs_f: { descr: 'Battery Sense voltage, filtered', unit: 'V' },
-                adc_va_f: { descr: "Array voltage, filtered", unit: "V" },
-                adc_ib_f_shadow: { descr: "Battery current, filtered", unit: "V" },
-                adc_ia_f_shadow: { descr: "Array current, filtered", unit: "A" },
-                adc_p12_f:    { descr: "12 volt supply, filtered", unit: "V" },
-                adc_p3_f:     { descr: "3 volt supply, filtered", unit: "V" },
-                adc_pmeter_f: { descr: "MeterBus voltage, filtered", unit: "V" },
-                adc_p18_f:    { descr: "1.8 volt supply, filtered", unit: "V" },
-                adc_v_ref:    { descr: "reference voltage", unit: "V" }
-            }
-        }
 
 
         self.data = {
@@ -154,22 +191,10 @@ function tristar_mppt() {
                 Tb_min_daily:   hr.register[71],
                 Tb_max_daily:   hr.register[72],
                 fault_daily:    hr.register[73],
-
             }
 
         }
-
-
-
-
-
-
         // dipswitches = bin(rr.registers[48])[::-1][:-2].zfill(8)
-
-
-
-        // debug
-        //console.log("---> tristar:", tristar);
     }
 
     return this
