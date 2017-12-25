@@ -113,7 +113,7 @@ function victron_mk2 () {
     function process_queue() {
         var c = self.queue.shift()
         if (c) {
-            console.log("shift", self.queue.length)
+            //console.log("shift", self.queue.length)
             self.busy = true
             setTimeout(() => {
                 mk2_request (c.buffer, c.cb, c.resolve, c.reject)
@@ -136,7 +136,7 @@ function victron_mk2 () {
             process_queue();
         }, 2000);
         try {
-            console.log("<<<<<<", buffer)
+            //console.log("<<<<<<", buffer)
             port.write(buffer);          // send data
             port.drain(() => {
                 port.flush(() => {
@@ -167,10 +167,10 @@ function victron_mk2 () {
                 } else {
                     // if checksum ok and no version frame
                     try {
-                        console.log("--->> ", frame)
+                        //console.log("--->> ", frame)
                         var result = recive (frame)
                         //console.log("frame: ", frame)
-                        console.log("result", result)
+                        //console.log("result", result)
                         //frame_debug(result.name, frame, result)
                         recive_resolve(result)    // callback
                         //recive = () => { console.log ("Clear callback pointer")} // clear common callback
