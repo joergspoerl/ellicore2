@@ -2,7 +2,7 @@
 
 // Tristar MODBUS
 
-function tristar_mppt() {
+function tristar_mppt(tristar_address) {
 
     self = this;
     self.data = {};
@@ -10,7 +10,7 @@ function tristar_mppt() {
 
     // create a modbus client
     var client = modbus.client.tcp.complete({
-        'host': "192.168.20.242", //192.168.1.32 TSMPPT10480676
+        'host': tristar_address, //192.168.1.32 TSMPPT10480676
         'port': 502,
         'autoReconnect': true,
         'reconnectTimeout': 4000,
