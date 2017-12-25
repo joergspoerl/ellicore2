@@ -17,8 +17,8 @@ function saa1064 (i2c, address) {
 
     console.log("address", self.address)
 
+    // init display
     self.i2c.writeByteSync(self.address, 0, 0b00110111);
-    self.i2c.writeByteSync(self.address, 1, 0b00110111);
     
 
     self.set_register =  (register, value) => {
