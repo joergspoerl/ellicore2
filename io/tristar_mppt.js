@@ -4,7 +4,7 @@
 
 function tristar_mppt(tristar_address) {
 
-    self = this;
+    var self = this;
     self.data = {};
 
 
@@ -38,7 +38,7 @@ function tristar_mppt(tristar_address) {
 
         client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
 
-            readTristar(tristarHoldingRegister);
+            self.data = readTristar(tristarHoldingRegister);
 
         }, console.error);
     }, 2000);
@@ -46,10 +46,9 @@ function tristar_mppt(tristar_address) {
 
 
     client.on('error', function (err) {
-
         console.log(err);
-
     })
+
 
     self.meta = {
 
@@ -123,10 +122,7 @@ function tristar_mppt(tristar_address) {
         var i_scale = I_PU * Math.pow(2, -15);
         var p_scale = V_PU * I_PU * Math.pow(2, -17);
 
-
-
-
-        self.data = {
+        return {
 
             adc: {
                 // Filtered ADC
@@ -195,6 +191,8 @@ function tristar_mppt(tristar_address) {
 
         }
         // dipswitches = bin(rr.registers[48])[::-1][:-2].zfill(8)
+
+        //console.log("DATA", self.data)
     }
 
     return this
