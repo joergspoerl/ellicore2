@@ -4,7 +4,7 @@ var core = require('../../../../core/core');
 
 router.get('/*', function (req, res) {
     var result = getNested (core.devices, req.params[0], "/");
-    res.end( JSON.stringify(result) );
+    res.end( JSON.stringify(result)  + '\n\r');
 })
 
 

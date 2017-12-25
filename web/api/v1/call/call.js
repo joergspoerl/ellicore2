@@ -10,13 +10,13 @@ router.get('/:device/:function_name/*', function (req, res) {
     core.devices[req.params.device][req.params.function_name].apply(null, params).then(
         (result) => {
             if (req.query.value) {
-                res.end( result[req.query.value] );
+                res.end( result[req.query.value] + '\n\r');
             } else {
-                res.end( JSON.stringify(result) );
+                res.end( JSON.stringify(result)  + '\n\r');
             }
         },
         (error)  => {
-            res.end( JSON.stringify(error) );
+            res.end( JSON.stringify(error)  + '\n\r');
         })
 })
 
