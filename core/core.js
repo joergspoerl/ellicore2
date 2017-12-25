@@ -6,10 +6,14 @@ var bmv = new victron_bmv("/dev/ttyUSB0")
 var victron_mk2 = require("../io/victron_mk2");
 var mk2 = new victron_mk2("/dev/ttyUSB1")
 
+var tristar_mppt = require("../io/tristar_mppt");
+var mppt = new tristar_mppt()
+
 module.exports = {
     devices: {
         bmv: bmv,
         mk2: mk2,
+        mppt: mppt,
         "7seg": {
             1: {data: "TEST1"},
             2: {data: "TEST2"},
