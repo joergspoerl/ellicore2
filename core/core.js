@@ -28,7 +28,9 @@ var manager = {
 raspi.init(() => {
     const i2c = new I2C();
     manager.devices.disp1 = new saa1064(i2c, 56);
-    manager.devices.disp2 = new saa1064(i2c, 58);
+    manager.devices.disp2 = new saa1064(i2c, 57);
+    manager.devices.disp3 = new saa1064(i2c, 58);
+    manager.devices.disp4 = new saa1064(i2c, 59);
     //var led7seg3 = new saa1064(60);
     //var led7seg4 = new saa1064(62);
 
