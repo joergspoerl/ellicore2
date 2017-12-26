@@ -16,6 +16,7 @@
     "jsmodbus": "^2.0.2",
     "nano": "^6.2.0",
     "node-couchdb": "^1.1.0",
+    "node-persist": "^2.1.0",
     "node-serial": "^0.1.1",
     "pouchdb": "^6.3.4",
     "prettyjson": "^1.2.1",
