@@ -1,12 +1,6 @@
 const express = require('express');
 const router  = express.Router();
-const core    = require('../../../../core/core');
-const history = require('../../../../core/history');
-
-router.get('/', function (req, res) {
-    var result = history;
-    res.end( JSON.stringify(result)  + '\n\r');
-})
+const core    = require('../../../../core');
 
 router.get('/*', function (req, res) {
     var result = getNested (core.devices, req.params[0], "/");

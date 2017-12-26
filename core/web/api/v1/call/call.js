@@ -1,6 +1,6 @@
 const express = require('express');
-const router = express.Router();
-var core = require('../../../../core/core');
+const router  = express.Router();
+const core    = require('../../../../core');
 
 
 router.get('/:device/:function_name/*', function (req, res) {
