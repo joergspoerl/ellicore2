@@ -152,20 +152,31 @@ data.mppt = {
         "Pout_max_daily": 5.548095703125,
         "Tb_min_daily": 8,
         "Tb_max_daily": 11,
-        "fault_daily": 0
+        "fault_daily": undefined
     }
 }
 
+var maxCallback = ( max, cur ) => Math.max( max, cur );
+var minCallback = ( min, cur ) => Math.min( min, cur );
+
+
+var d_array = [data,data,data,data]
+
+
 var target = {}
+//nh.copy_nested_property (target, "data", data);
 
+nh.iter_obj (d_array[0], "", (obj, path, key) => {
+    console.log("obj[key]", obj[key], "path", path, "key", key)
+    var t = d_array.map( x => nh.nestedProperty.get(x, path.substring(1)) )
+    console.log("t", t)
+    var n = t.filter ( x => typeof x === "number")
+    console.log("n", n)
+    var min = n.reduce( minCallback, Infinity )
+    var max = n.reduce( maxCallback, -Infinity )
+    console.log("max", max, "min", min)
+})
 
+// var t = d_array.map( x => nh.nestedProperty.get(x, "bmv.V") )
 
-
-
-
-
-
-nh.copy_nested_property (target, "data", data);
-
-
-console.log("target", target)
+// console.log("t", t)

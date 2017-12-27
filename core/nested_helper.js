@@ -17,15 +17,14 @@ function copy_nested_property(target, path, obj) {
 
     iter_obj(obj, path, (obj, path, key) => {
         if (typeof obj[key] === 'number' ) {
-            var full_name = path + "." + key
-            console.log("path: ", full_name + ': ' + obj[key]);
-            nestedProperty.set(target, full_name, obj[key])
+            nestedProperty.set(target, path, obj[key])
         }
 
     })
 }
 
 module.exports = {
+    nestedProperty:       nestedProperty,
     iter_obj:             iter_obj,
     copy_nested_property: copy_nested_property
 }
