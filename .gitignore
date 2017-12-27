@@ -4,6 +4,7 @@
 dbCredentials.json
 # local pouchdb
 /ellicore-current
+.node-persist
 
 # compiled output
 /dist
