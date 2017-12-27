@@ -9,6 +9,12 @@ const mk2_emitter = new Mk2_emitter();
 //   encode & decode mk2 protocol over serial line
 //   io interface for ellicode project
 
+function round (number, decimal) {
+    var e = Math.pow (10,decimal)
+    return Math.round(number * e) / e
+}
+
+
 function victron_mk2 () {
     console.log("new instant 'victron_mk2'")
     var self = this;
@@ -357,11 +363,10 @@ function victron_mk2 () {
             
             return {
                 dc_info: {
-                    ubat: ((ubat+self.calc.ubat_calc.offset) * scale(self.calc.ubat_calc.scale) / 10).toFixed(2), 
-                    ibat: ((ibat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10).toFixed(2), 
-                    cbat: ((cbat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10).toFixed(2), 
-                    finv: (10 / ((finv+self.calc.finv_calc.offset) * scale(self.calc.finv_calc.scale))).toFixed(2),
-                    frame: frame,
+                    ubat: round (((ubat+self.calc.ubat_calc.offset) * scale(self.calc.ubat_calc.scale) / 10),   2), 
+                    ibat: round (((ibat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10),   2), 
+                    cbat: round (((cbat+self.calc.ibat_calc.offset) * scale(self.calc.ibat_calc.scale) / 10),   2), 
+                    finv: round ((10 / ((finv+self.calc.finv_calc.offset) * scale(self.calc.finv_calc.scale))), 2),
                 }
             }
         });
@@ -389,11 +394,11 @@ function victron_mk2 () {
     
             return {
                 ac_info: { 
-                    umains: ((umains+self.calc.umains_calc.offset) * scale(self.calc.umains_calc.scale)).toFixed(1), 
-                    imains: ((imains+self.calc.imains_calc.offset) * scale(self.calc.imains_calc.scale)).toFixed(1), 
-                    uinv:   ((uinv+self.calc.uinv_calc.offset) * scale(self.calc.uinv_calc.scale)).toFixed(1), 
-                    iinv:   ((iinv+self.calc.iinv_calc.offset) * scale(self.calc.iinv_calc.scale)).toFixed(1), 
-                    fmains: (10 / ((fmains + self.calc.fmains_calc.offset) * scale(self.calc.fmains_calc.scale))).toFixed(1) 
+                    umains: round (((umains+self.calc.umains_calc.offset) * scale(self.calc.umains_calc.scale)), 1), 
+                    imains: round (((imains+self.calc.imains_calc.offset) * scale(self.calc.imains_calc.scale)), 1), 
+                    uinv:   round (((uinv+self.calc.uinv_calc.offset) * scale(self.calc.uinv_calc.scale)), 1), 
+                    iinv:   round (((iinv+self.calc.iinv_calc.offset) * scale(self.calc.iinv_calc.scale)), 1), 
+                    fmains: round ((10 / ((fmains + self.calc.fmains_calc.offset) * scale(self.calc.fmains_calc.scale))), 1) 
                 }
             }
         });

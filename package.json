@@ -15,6 +15,7 @@
     "express": "^4.14.0",
     "jsmodbus": "^2.0.2",
     "nano": "^6.2.0",
+    "nested-property": "0.0.7",
     "node-couchdb": "^1.1.0",
     "node-persist": "^2.1.0",
     "node-serial": "^0.1.1",
