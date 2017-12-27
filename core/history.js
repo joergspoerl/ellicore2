@@ -5,6 +5,10 @@ storage.initSync();
 const storage_name = "ellicore_history"
 
 
+
+
+
+
 var data = [
     { 
         buffer: new hbuffer (60, "second")
@@ -22,7 +26,11 @@ var data = [
 
 // every second
 setInterval(() => {
-    var value = core.devices.bmv.data.V;
+    //var value = core.devices.bmv.data.V;
+    var value = {}
+    copy_nested_property(value, "bmv.data", core.devices.bmv.data)
+    copy_nested_property(value, "mk2.data", core.devices.mk2.data)
+    copy_nested_property(value, "mppt.data", core.devices.mppt.data)
     data[0].buffer.add(value)
     //console.log("buffer", data)
 }, 1000);
@@ -65,6 +73,10 @@ function hbuffer (size, name) {
 
             storage.setItem (storage_name + name, this._buffer)
         }
+    }
+
+    this.iterate_member = function() {
+        var member_list = 
     }
 
     this.sum = function () {

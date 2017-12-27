@@ -1,4 +1,4 @@
-var nestedProperty = require("nested-property");
+var nh = require("./nested_helper");
 
 var data = {};
 var data1 = {
@@ -158,21 +158,14 @@ data.mppt = {
 
 var target = {}
 
-function iterObj(obj, path, target) {
-    for (var key in obj) {
-      if (obj[key] !== null && typeof obj[key] === "object") {
-        // Recurse into children
-        iterObj(obj[key], path + "." + key, target);
-      } else {
-          if (typeof obj[key] === 'number' ) {
-              var full_name = path + "." + key
-              console.log("path: ", full_name + ': ' + obj[key]);
-              nestedProperty.set(target, full_name, obj[key])
-              }
-      }
-    }
-}
 
-iterObj (data, "data", target);
+
+
+
+
+
+
+nh.copy_nested_property (target, "data", data);
+
 
 console.log("target", target)
