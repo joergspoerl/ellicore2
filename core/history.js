@@ -59,7 +59,7 @@ setInterval(() => {
 setInterval(() => {
     add_item (data.minutes, calc_stat(data.seconds))
     storage.setItemSync('ellicore_minutes',data.minutes);
-}, 10000)
+}, 60000)
 
 
 var data = {
@@ -67,7 +67,8 @@ var data = {
     minutes: init_array(60),
     hours:   init_array(24),
 
-    diagramm: diagramm
+    diagramm_seconds: diagramm_seconds,
+    diagramm_minutes: diagramm_minutes,
 }
 
 get_stored_items();
@@ -88,11 +89,25 @@ function get_stored_items () {
     }
 }
 
-function diagramm (value_path) {
+function diagramm_seconds (value_path) {
     var val_array = data.seconds.map( x => nh.nestedProperty.get(x, value_path) )
-    var y   = val_array.filter( x => typeof x === "number").slice(-20)
+    var y   = val_array.filter( x => typeof x === "number")  //.slice(-20)
     var x   =  Array.apply(null, Array( y.length )).map( () => "-")
     return { value_path: value_path, x:x, y:y};
+}
+
+function diagramm_minutes (value_path) {
+    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".avg") )
+    var y   = val_array.filter( x => typeof x === "number")  //.slice(-20)
+
+    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".min") )
+    var min   = val_array.filter( x => typeof x === "number")  //.slice(-20)
+
+    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".max") )
+    var max   = val_array.filter( x => typeof x === "number")  //.slice(-20)
+
+    var x   =  Array.apply(null, Array( y.length )).map( () => "-")
+    return { value_path: value_path, x:x, y:y, min:min, max:max};
 }
 
 module.exports = data;

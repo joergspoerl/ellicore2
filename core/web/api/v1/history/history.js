@@ -3,8 +3,13 @@ const router  = express.Router();
 const core    = require('../../../../core');
 const history = require('../../../../history');
 
-router.get('/diagramm/:value_path', function (req, res) {
-    var result = history.diagramm(req.params.value_path);
+router.get('/diagramm_seconds/:value_path', function (req, res) {
+    var result = history.diagramm_seconds(req.params.value_path);
+    res.end( JSON.stringify(result)  + '\n\r');
+})
+
+router.get('/diagramm_minutes/:value_path', function (req, res) {
+    var result = history.diagramm_minutes(req.params.value_path);
     res.end( JSON.stringify(result)  + '\n\r');
 })
 
