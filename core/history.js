@@ -58,6 +58,7 @@ setInterval(() => {
 
 setInterval(() => {
     add_item (data.minutes, calc_stat(data.seconds))
+    storage.setItemSync('ellicore_minutes',data.minutes);
 }, 10000)
 
 
@@ -67,6 +68,24 @@ var data = {
     hours:   init_array(24),
 
     diagramm: diagramm
+}
+
+get_stored_items();
+
+function get_stored_items () {
+    let seconds = storage.getItemSync('ellicore_seconds');
+    let minutes = storage.getItemSync('ellicore_minutes');
+    let hours   = storage.getItemSync('ellicore_hours');
+
+    if (seconds) {
+        data.seconds = seconds
+    }
+    if (minutes) {
+        data.minutes = minutes
+    }
+    if (hours) {
+        data.hours = hours
+    }
 }
 
 function diagramm (value_path) {
