@@ -15,100 +15,89 @@ function add_item (buffer, item) {
     return buffer
 }
 
-function add_current () {
-    let current = {}
-    nh.copy_nested_property(current, "bmv.data",  core.devices.bmv.data)
-    nh.copy_nested_property(current, "mk2.data",  core.devices.mk2.data)
-    nh.copy_nested_property(current, "mppt.data", core.devices.mppt.data)
-    add_item(data.seconds, current)
+
+var data = {
+    seconds: {
+        _limit: 60,
+    },
+    minutes: {
+        _limit: 60,
+    },
+    hours:   {
+        _limit: 24,
+    },
+
+}
+
+function collect_data (target, source, name_prefix, next_level_cb) {
+    target._counter = target._counter || 0
+    target._counter++
+    nh.iter_obj (source, "", (obj, path, key) => {
+        //console.log("obj[key]", obj[key], "path", path, "key", key)
+        if (!target[name_prefix + path]) {
+            target[name_prefix + path] = []
+        }
+        target[name_prefix + path].push (obj[key])  // add value
+        if (target[name_prefix + path].length > target._limit) {
+            target[name_prefix + path].shift()
+        }
+    })
+    if (target._counter > target._limit) {
+        target._counter = 0
+        if (next_level_cb) next_level_cb()
+    }
 }
 
 var maxCallback = ( max, cur ) => Math.max( max, cur );
 var minCallback = ( min, cur ) => Math.min( min, cur );
 
 
-function calc_stat (buffer) {
-    var result = {}
-    nh.iter_obj (buffer[59], "", (obj, path, key) => {
-        //console.log("obj[key]", obj[key], "path", path, "key", key)
-        var val_array = buffer.map( x => nh.nestedProperty.get(x, path.substring(1)) )
-        var numbers   = val_array.filter( x => typeof x === "number")
-        var sum    = numbers.reduce((a, b) =>  a + b , 0)
-        var avg    = sum / numbers.length;
-        var min    = numbers.reduce(minCallback, Infinity)
-        var max    = numbers.reduce(maxCallback, -Infinity)
+function calc_stat (target, source) {
 
-        nh.nestedProperty.set(result, path.substring(1), {
-            avg: avg,
-            min: min,
-            max: max
-        })
-    })
-
-    return result
+    for (var key in source) {
+        if (!key.startsWith("_")) {
+            console.log("key", key, "source[key]", source[key])
+            let numbers = source[key]
+    
+            let sum    = numbers.reduce((a, b) =>  a + b , 0)
+            let val    = sum / numbers.length;
+            let min    = numbers.reduce(minCallback, Infinity)
+            let max    = numbers.reduce(maxCallback, -Infinity)
+    
+            console.log("key", key, source[key])
+    
+            if (!target[key]) target[key] = []
+            target[key].push ({
+                val: val,
+                min: min,
+                max: max
+            })
+    
+        }
+    }
+    
 }
 
 
+setInterval ( () => {
 
-
-setInterval(() => {
-    add_current()
+    collect_data (data.seconds, core.devices.bmv.data, "bmv.data", () => {
+        console.log("next level")
+        calc_stat(data.minutes, data.seconds)
+        store_minutes();
+    })
+    //console.log (data.seconds)
 }, 1000)
 
 
-setInterval(() => {
-    add_item (data.minutes, calc_stat(data.seconds))
-    storage.setItemSync('ellicore_minutes',data.minutes);
-}, 60000)
-
-
-var data = {
-    seconds: init_array(60),
-    minutes: init_array(60),
-    hours:   init_array(24),
-
-    diagramm_seconds: diagramm_seconds,
-    diagramm_minutes: diagramm_minutes,
+function store_minutes () {
+    storage.setItemSync('ellicore_l1_' + Date.now(), data.minutes);
 }
 
-get_stored_items();
 
-function get_stored_items () {
-    let seconds = storage.getItemSync('ellicore_seconds');
-    let minutes = storage.getItemSync('ellicore_minutes');
-    let hours   = storage.getItemSync('ellicore_hours');
 
-    if (seconds) {
-        data.seconds = seconds
-    }
-    if (minutes) {
-        data.minutes = minutes
-    }
-    if (hours) {
-        data.hours = hours
-    }
-}
 
-function diagramm_seconds (value_path) {
-    var val_array = data.seconds.map( x => nh.nestedProperty.get(x, value_path) )
-    var y   = val_array.filter( x => typeof x === "number")  //.slice(-20)
-    var x   =  Array.apply(null, Array( y.length )).map( () => "-")
-    return { value_path: value_path, x:x, y:y};
-}
 
-function diagramm_minutes (value_path) {
-    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".avg") )
-    var y   = val_array.filter( x => typeof x === "number")  //.slice(-20)
-
-    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".min") )
-    var min   = val_array.filter( x => typeof x === "number")  //.slice(-20)
-
-    var val_array = data.minutes.map( x => nh.nestedProperty.get(x, value_path + ".max") )
-    var max   = val_array.filter( x => typeof x === "number")  //.slice(-20)
-
-    var x   =  Array.apply(null, Array( y.length )).map( () => "-")
-    return { value_path: value_path, x:x, y:y, min:min, max:max};
-}
 
 module.exports = data;
 

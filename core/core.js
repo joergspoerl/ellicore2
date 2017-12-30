@@ -27,10 +27,10 @@ var core = {
 
 raspi.init(() => {
     const i2c = new I2C();
-    core.devices.disp1 = new saa1064(i2c, 56);
-    core.devices.disp2 = new saa1064(i2c, 57);
-    core.devices.disp3 = new saa1064(i2c, 58);
-    core.devices.disp4 = new saa1064(i2c, 59);
+    // core.devices.disp1 = new saa1064(i2c, 56);
+    // core.devices.disp2 = new saa1064(i2c, 57);
+    // core.devices.disp3 = new saa1064(i2c, 58);
+    // core.devices.disp4 = new saa1064(i2c, 59);
 })
 
 
