@@ -10,9 +10,10 @@ let values = storage
             .filter((key) => key.startsWith("ellicore_l1"))
             .sort()
             .reverse()
-            .slice(-4)
-            .map((key) => storage.getItemSync(key))
-            .map((val) => Object.keys(val)) 
+            //.slice(-4)
+            //.map((key) => storage.getItemSync(key))
+            //.map((val) => Object.keys(val)) 
+            .length
 
             //console.log("keys", JSON.stringify(keys))
 console.log("values", JSON.stringify(values))
