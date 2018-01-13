@@ -10,11 +10,11 @@ var c = new Client({
   db: "history"
 });
 
-function iter_source (cb) {
+function iter_source (timer_id, cb) {
     var prep_source = c.prepare(
-        'select * from source ');
+        'SELECT * FROM source WHERE timer_id = :timer_id');
     
-    c.query(prep_source({}), function(err, rows) {
+    c.query(prep_source({timer_id: timer_id}), function(err, rows) {
         if (err)
             throw err;
         console.dir(rows);
@@ -47,6 +47,11 @@ function get_value (source) {
         resp.on('end', () => {
             // console.log(JSON.parse(data));            
             console.log(data);
+
+            if (source.func && source.func != "") {
+                data = eval(source.func)(data)
+            }
+
             insert_value(source, data)  
         });
  
@@ -71,10 +76,16 @@ function insert_value (source, value) {
 
 
 setInterval(() => {
-    iter_source ((source) => {
+    iter_source (1, (source) => {
         get_value(source)
     })  
 }, 1000);
-      
+
+setInterval(() => {
+    iter_source (2, (source) => {
+        get_value(source)
+    })  
+}, 60000);
+
 
 c.end();
