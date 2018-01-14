@@ -54,6 +54,7 @@ CREATE TABLE `data` (
   `level` int(11) NOT NULL,
   PRIMARY KEY (`id`,`time`,`level`)
 ) ENGINE=InnoDB AUTO_INCREMENT=384116 DEFAULT CHARSET=latin1
+;
 
 CREATE TABLE `source` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -66,6 +67,7 @@ CREATE TABLE `source` (
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1
+;
 
 CREATE TABLE `timer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -73,6 +75,7 @@ CREATE TABLE `timer` (
   `time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1
+;
 
 /* -------------------------------------------------------------- */
 
@@ -114,16 +117,23 @@ select * from history.data;
 show table status;
 
 /* disc usage */
-SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size (MB)` FROM information_schema.TABLES WHERE table_schema = "history";
+SELECT 
+    table_name AS `Table`, 
+    round(((data_length + index_length) / 1024 / 1024), 2) `Size (MB)` 
+FROM information_schema.TABLES 
+WHERE table_schema = "history";
+
+
+OPTIMIZE TABLE data;
 
 
 
 
-
-
-
-/* --------------------------------------------------------------- */
-
+/* --------------------------------------------------------------- 
+   agregate on minute base
+   all over 2 hours in past
+   delete level 0 data
+*/
 SET @time_range = now() - INTERVAL 2 HOUR;               
                                         
 INSERT INTO data (time, source_id, value, min, max, count, level)
@@ -144,4 +154,57 @@ GROUP BY date_trunc, source_id;
 DELETE FROM data
 WHERE time < @time_range                                                                                    
   AND level = 0;
+
+
+
+
+
+
+
+/* --------------------------------------------------------------- 
+    store procedure calc_level1
+
+
+*/
+
+USE `history`;
+DROP procedure IF EXISTS `calc_level1`;
+
+DELIMITER $$
+USE `history`$$
+CREATE DEFINER=`root`@`192.168.1.%` PROCEDURE `calc_level1`()
+
+BEGIN
+	/* --------------------------------------------------------------- 
+	   agregate on minute base
+	   all over 2 hours in past
+	   delete level 0 data
+	*/
+	SET @time_range = now() - INTERVAL 2 HOUR;               
+											
+	INSERT INTO data (time, source_id, value, min, max, count, level)
+	SELECT
+		DATE_FORMAT(time, '%Y-%m-%d %H:%i') AS date_trunc,
+		source_id  as source_id,
+		AVG(value) as value,
+		MIN(value) as min,
+		MAX(value) as max,                                                                                     
+		COUNT(*)   as count,
+		1          as LEVEL
+	FROM
+		data
+	WHERE time < @time_range                                                                                    
+	  AND level = 0
+	GROUP BY date_trunc, source_id;
+
+	DELETE FROM data
+	WHERE time < @time_range                                                                                    
+	  AND level = 0;
+
+	OPTIMIZE TABLE data;
+
+END;$$
+
+DELIMITER ;
+/* --------------------------------------------------------------- */
 
