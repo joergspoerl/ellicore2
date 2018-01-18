@@ -130,10 +130,7 @@ WHERE table_schema = "history"
 
 
 
-
 OPTIMIZE TABLE data;
-
-
 
 
 /* --------------------------------------------------------------- 
