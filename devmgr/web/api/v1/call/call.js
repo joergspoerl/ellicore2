@@ -1,6 +1,6 @@
 const express = require('express');
 const router  = express.Router();
-const core    = require('../../../../core');
+const core    = require('../../../../devmgr');
 
 
 router.get('/:device/:function_name/*', function (req, res) {
