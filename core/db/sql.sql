@@ -7,7 +7,7 @@ prompt \t \u@\h:\d>\n
 /* Agregation minute ------------------------------------------------ */
 
 SELECT 
-    DATE_FORMAT(time, '%Y-%m-%d %H:%i') AS date_trunc,
+    DATE_FORMAT(time, '%Y-%m-%d %H: %i') AS date_trunc,
     source_id,
     AVG(value) as value,
     MIN(value) as min,

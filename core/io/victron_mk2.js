@@ -38,7 +38,7 @@ function victron_mk2 () {
     var port = new SerialPort('/dev/ttyUSB1', {
         baudRate: 2400,
        // parser: SerialPort.parsers.byteDelimiter([255])
-    }, (error) => {
+    }, async (error) => {
 
         if (!error) {
             console.log("mk2-dtr: on");
@@ -51,8 +51,15 @@ function victron_mk2 () {
                 "dts": false,
                 "brk": false,
             })
+            
+            try {
+                await self.address()
+            }
+            catch (e) {}
+
             setTimeout(() => {
                 //run();
+                
                 self.start();
             },500)
         } else {
@@ -162,7 +169,7 @@ function victron_mk2 () {
     
     // on recive data event
     port.on('data', function (data) {
-    
+        //console.log("on data: ", data)
         in_buf = Buffer.concat([in_buf,data]);
     
         if (in_buf.byteLength >= in_buf[0]+2) {
