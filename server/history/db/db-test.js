@@ -20,7 +20,16 @@ db.history.showTableSize().then(
     } 
 )
 
-db.history.calc_level1().then(
+// db.history.calc_level1().then(
+//     (data) => {
+//         console.log("data:", data)
+//     },
+//     (error) => {
+//         console.log("error:", error)        
+//     } 
+// )
+
+db.history.get(0,3,10).then(
     (data) => {
         console.log("data:", data)
     },

@@ -104,7 +104,25 @@ c.history.run_sql  = (sql) => {
     })
 }
 
-
+c.history.get  = (level, source_id, limit) => {
+    return new Promise((resolve, reject) => {
+        var prep_source = c.prepare(
+            `
+            SELECT value from data
+            WHERE 
+                 level     = :level
+             AND source_id = :source_id
+            ORDER BY id DESC
+            LIMIT 10
+            `)
+    
+        c.query(prep_source({ level: level, source_id: source_id,limit: 10  }), true, function(err, rows) {
+            if (err)
+                reject (err);
+            resolve(rows)
+        });    
+    })
+}
 //c.end();
 
 
