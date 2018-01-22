@@ -119,6 +119,7 @@ c.history.get  = (level, source_id, limit) => {
         c.query(prep_source({ level: level, source_id: source_id,limit: 10  }), true, function(err, rows) {
             if (err)
                 reject (err);
+            //console.log("rows", rows)
             resolve(rows)
         });    
     })
