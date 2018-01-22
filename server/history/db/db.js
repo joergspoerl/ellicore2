@@ -43,11 +43,14 @@ c.history.calc_level1 = () => {
     })
 }
 
-c.history.iter_timer = (cb) => {
+c.history.iter_timer = (type, cb) => {
     var prep_source = c.prepare(
-        'SELECT * FROM timer');
+        `
+        SELECT * FROM timer
+        WHERE type = :type
+        `);
     
-    c.query(prep_source({}), function(err, rows) {
+    c.query(prep_source({type: type}), function(err, rows) {
         if (err)
             throw err;
     
@@ -81,6 +84,19 @@ c.history.insert_value  = (source, value) => {
             `)
     
         c.query(prep_source({ source_id: source.id, level:0, value: value }), function(err, rows) {
+            if (err)
+                reject (err);
+            resolve(rows)
+        });    
+    })
+}
+
+
+c.history.run_sql  = (sql) => {
+    return new Promise((resolve, reject) => {
+        var prep_source = c.prepare(sql)
+    
+        c.query(prep_source({}), function(err, rows) {
             if (err)
                 reject (err);
             resolve(rows)

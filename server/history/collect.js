@@ -1,30 +1,7 @@
-const Client = require('mariasql');
+const db     = require('./db/db');
 const http   = require('http');
 const https  = require('https');
 const url    = require('url')
-
-var c = new Client({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'raspberry',
-  db: "history"
-});
-
-function iter_source (timer_id, cb) {
-    var prep_source = c.prepare(
-        'SELECT * FROM source WHERE timer_id = :timer_id');
-    
-    c.query(prep_source({timer_id: timer_id}), function(err, rows) {
-        if (err)
-            throw err;
-        console.dir(rows);
-    
-        rows.some((row) => {
-            cb(row)
-        })
-    });    
-}
-
 
 
 function get_value (source) {
@@ -52,7 +29,7 @@ function get_value (source) {
                 data = eval(source.func)(data)
             }
 
-            insert_value(source, data)  
+            db.history.insert_value(source, data)  
         });
  
     }).on("error", (err) => {
@@ -61,31 +38,32 @@ function get_value (source) {
 
 }
 
-function insert_value (source, value) {
+function create_timer () {
+    db.history.iter_timer (1, (timer) => {
+        console.log("timer (1):", timer)
+    
+        setInterval(() => {
+            db.history.iter_source (timer.id, (source) => {
+                get_value(source)
+            })  
+        }, timer.time);
+        
+    })
 
-    var prep = c.prepare(
-    'insert into history.data (time, source_id, level, value) values (now(), :source_id, :level, :value) ');
-
-    c.query(prep({ source_id: source.id, level:0, value: value }), function(err, rows) {
-        if (err)
-            throw err;
-        console.dir(rows);
-    });
+    db.history.iter_timer (2, (timer) => {
+        console.log("timer (2):", timer)
+    
+        setInterval(() => {
+            db.history.run_sql (timer.sql, (result) => {
+                console.log(result)
+            })  
+        }, timer.time);
+        
+    })
+    
     
 }
 
+create_timer()
 
-setInterval(() => {
-    iter_source (1, (source) => {
-        get_value(source)
-    })  
-}, 1000);
-
-setInterval(() => {
-    iter_source (2, (source) => {
-        get_value(source)
-    })  
-}, 60000);
-
-
-c.end();
+//c.end();

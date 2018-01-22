@@ -2,7 +2,7 @@ db = require("./db")
 
 //console.log("db", db)
 
-db.history.iter_timer ((timer) => {
+db.history.iter_timer (1, (timer) => {
     console.log("timer:", timer)
 
     db.history.iter_source (timer.id, (source) => {
