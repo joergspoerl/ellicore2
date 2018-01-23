@@ -7,8 +7,8 @@ router.get('/test/:value_path', function (req, res) {
     res.end( JSON.stringify(result)  + '\n\r');
 })
 
-router.get('/get/:level/:source_id', function (req, res) {
-    db.history.get(req.params.level, req.params.source_id).then(
+router.get('/data/:level/:source_id/:limit', function (req, res) {
+    db.history.data(req.params.level, req.params.source_id, req.params.limit).then(
         (rows) => {
             res.end( JSON.stringify(rows)  + '\n\r');
         },
@@ -18,5 +18,16 @@ router.get('/get/:level/:source_id', function (req, res) {
     )
 })
 
+
+router.get('/source/', function (req, res) {
+    db.history.source(req.params.level, req.params.source_id, req.params.limit).then(
+        (rows) => {
+            res.end( JSON.stringify(rows)  + '\n\r');
+        },
+        (error) => {
+            res.end( JSON.stringify(error)  + '\n\r');
+        }
+    )
+})
 
 module.exports = router;

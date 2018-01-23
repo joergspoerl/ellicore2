@@ -104,19 +104,19 @@ c.history.run_sql  = (sql) => {
     })
 }
 
-c.history.get  = (level, source_id, limit) => {
+c.history.data  = (level, source_id, limit) => {
     return new Promise((resolve, reject) => {
-        var prep_source = c.prepare(
+        var sql = 
             `
             SELECT value from data
             WHERE 
                  level     = :level
              AND source_id = :source_id
             ORDER BY id DESC
-            LIMIT 10
-            `)
+            LIMIT ` + limit
+            
     
-        c.query(prep_source({ level: level, source_id: source_id,limit: 10  }), true, function(err, rows) {
+        c.query(sql, { level: level, source_id: source_id,limit: limit  }, { useArray: true, metadata: true,  }, function(err, rows) {
             if (err)
                 reject (err);
             //console.log("rows", rows)
@@ -124,6 +124,30 @@ c.history.get  = (level, source_id, limit) => {
         });    
     })
 }
+
+
+
+
+
+c.history.source  = () => {
+    return new Promise((resolve, reject) => {
+        var sql = 
+            `
+            SELECT * from source
+            ORDER BY id
+            `            
+    
+        c.query(sql, {  }, { useArray: true, metadata: true,  }, function(err, rows) {
+            if (err)
+                reject (err);
+            //console.log("rows", rows)
+            resolve(rows)
+        });    
+    })
+}
+
+
+
 //c.end();
 
 
