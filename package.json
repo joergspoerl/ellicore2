@@ -13,6 +13,7 @@
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
     "bufferpack": "0.0.6",
+    "cors": "^2.8.4",
     "crypto-js": "^3.1.9-1",
     "express": "^4.14.0",
     "jsmodbus": "^2.0.2",

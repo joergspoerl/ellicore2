@@ -5,15 +5,44 @@
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+
+<ion-item>
+  <ion-label>level</ion-label>
+  <ion-select type="number" [(ngModel)]="level">
+    <ion-option value="0">second</ion-option>
+    <ion-option value="1">minutes</ion-option>
+  </ion-select>
+</ion-item>
+
+<ion-item>
+  <ion-label>source</ion-label>
+  <ion-select type="number" [(ngModel)]="source_id">
+    <ion-option value="1">1</ion-option>
+    <ion-option value="2">2</ion-option>
+    <ion-option value="3">3</ion-option>
+    <ion-option value="4">4</ion-option>
+    <ion-option value="5">5</ion-option>
+    <ion-option value="6">6</ion-option>
+    <ion-option value="7">7</ion-option>
+    <ion-option value="8">8</ion-option>
+    <ion-option value="9">9</ion-option>
+  </ion-select>
+</ion-item>
+
+<ion-item>
+  <ion-label>limit</ion-label>
+  <ion-select type="number" [(ngModel)]="limit">
+    <ion-option value="1">1</ion-option>
+    <ion-option value="10">10</ion-option>
+    <ion-option value="60">60</ion-option>
+    <ion-option value="120">120</ion-option>
+    <ion-option value="240">240</ion-option>
+    <ion-option value="480">480</ion-option>
+    <ion-option value="960">960</ion-option>
+    <ion-option value="1920">1920</ion-option>
+    <ion-option value="3620">3620</ion-option>
+  </ion-select>
+</ion-item>
 
   <ngx-charts-line-chart
   [view]="view"
@@ -28,6 +57,7 @@
   [xAxisLabel]="xAxisLabel"
   [yAxisLabel]="yAxisLabel"
   [autoScale]="autoScale"
+  [animations]="animations"
   (select)="onSelect($event)">
   </ngx-charts-line-chart>
 
