@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { single, multi} from './data'
+import { WapiProvider } from '../../providers/wapi/wapi'
 
 @Component({
   selector: 'page-home',
@@ -31,9 +32,18 @@ export class HomePage {
   // line, area
   autoScale = true;
 
-  constructor(public navCtrl: NavController) {
+  constructor(
+    public navCtrl: NavController,
+    public wapi: WapiProvider,
+  ) {
     Object.assign(this, {single, multi})   
   }
+
+  ionViewDidEnter() {
+    let t = this.wapi.getData(0,1,10)
+    console.log("t:", t)
+  }
+
 
   onSelect(event) {
     console.log(event);

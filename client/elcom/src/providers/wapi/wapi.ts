@@ -10,8 +10,16 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class WapiProvider {
 
+  baseUrl: string = 'http://192.168.1.10:8082/';
+
   constructor(public http: HttpClient) {
     console.log('Hello WapiProvider Provider');
   }
+
+  getData(level:number,source_id:number,limit:number) {
+    return this.http.get(
+      `${this.baseUrl}/api/v1/history/data/${level}/${source_id}/${limit}`)
+  }
+
 
 }
