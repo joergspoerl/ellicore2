@@ -89,6 +89,8 @@ export class HomePage {
   ionViewDidLeave() {
     clearInterval(this.interval)
   }
+
+  
   onSelect(event) {
     console.log(event);
   }
