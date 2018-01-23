@@ -80,6 +80,7 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
+    console.log("ionViewDidEnter()")
     this.interval = setInterval(() => {
       this.loadChart();
     }, 1000);
@@ -87,10 +88,11 @@ export class HomePage {
   }
 
   ionViewDidLeave() {
+    console.log("ionViewDidLeave()")
     clearInterval(this.interval)
   }
 
-  
+
   onSelect(event) {
     console.log(event);
   }

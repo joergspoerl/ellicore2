@@ -108,7 +108,7 @@ c.history.data  = (level, source_id, limit) => {
     return new Promise((resolve, reject) => {
         var sql = 
             `
-            SELECT value from data
+            SELECT time, value from data
             WHERE 
                  level     = :level
              AND source_id = :source_id
