@@ -1,5 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
@@ -11,6 +12,10 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { WapiProvider } from '../providers/wapi/wapi';
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -21,7 +26,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    BrowserAnimationsModule,
+    IonicModule.forRoot(MyApp),
+    NgxChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -34,7 +41,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    WapiProvider
   ]
 })
 export class AppModule {}
