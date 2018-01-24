@@ -6,43 +6,96 @@
 
 <ion-content padding>
 
-<ion-item>
-  <ion-label>level</ion-label>
-  <ion-select type="number" [(ngModel)]="level">
-    <ion-option value="0">second</ion-option>
-    <ion-option value="1">minutes</ion-option>
-  </ion-select>
-</ion-item>
+  <ion-grid>
 
-<ion-item>
-  <ion-label>source</ion-label>
-  <ion-select type="number" [(ngModel)]="source_id">
-    <ion-option value="1">1</ion-option>
-    <ion-option value="2">2</ion-option>
-    <ion-option value="3">3</ion-option>
-    <ion-option value="4">4</ion-option>
-    <ion-option value="5">5</ion-option>
-    <ion-option value="6">6</ion-option>
-    <ion-option value="7">7</ion-option>
-    <ion-option value="8">8</ion-option>
-    <ion-option value="9">9</ion-option>
-  </ion-select>
-</ion-item>
+    <ion-row>
+      <ion-col col-12>
 
-<ion-item>
-  <ion-label>limit</ion-label>
-  <ion-select type="number" [(ngModel)]="limit">
-    <ion-option value="1">1</ion-option>
-    <ion-option value="10">10</ion-option>
-    <ion-option value="60">60</ion-option>
-    <ion-option value="120">120</ion-option>
-    <ion-option value="240">240</ion-option>
-    <ion-option value="480">480</ion-option>
-    <ion-option value="960">960</ion-option>
-    <ion-option value="1920">1920</ion-option>
-    <ion-option value="3620">3620</ion-option>
-  </ion-select>
-</ion-item>
+          <ion-item>
+              <ion-range [(ngModel)]="level" min=0 max=2 step=1 snaps>
+                <ion-icon range-left small name="clock"></ion-icon>
+                <ion-icon range-right name="clock"></ion-icon>
+              </ion-range>
+          </ion-item>
+          
+      </ion-col>
+      <ion-col col-12>
+
+          <ion-item>
+              <ion-range [(ngModel)]="source_id" min=0 max=10 step=1 snaps>
+                <ion-icon range-left small name="value"></ion-icon>
+                <ion-icon range-right name="value"></ion-icon>
+              </ion-range>
+          </ion-item>
+
+
+      </ion-col>
+      <ion-col col-12>
+
+          <ion-item>
+              <ion-range [(ngModel)]="limit" min=0 max=4000 step=1 snaps>
+                <ion-icon range-left small name="min"></ion-icon>
+                <ion-icon range-right name="max"></ion-icon>
+              </ion-range>
+          </ion-item>
+
+
+      </ion-col>
+      </ion-row>
+    
+    <ion-row>
+      <ion-col col-4>
+
+        <ion-item>
+          <ion-label>level</ion-label>
+          <ion-select type="number" [(ngModel)]="level" (onChange)="loadChart()">
+            <ion-option value="0">second</ion-option>
+            <ion-option value="1">minutes</ion-option>
+          </ion-select>
+        </ion-item>
+        
+      </ion-col>
+      <ion-col col-4>
+
+        <ion-item>
+          <ion-label>source</ion-label>
+          <ion-select type="number" [(ngModel)]="source_id"  (onChange)="loadChart()">
+            <ion-option value="1">1</ion-option>
+            <ion-option value="2">2</ion-option>
+            <ion-option value="3">3</ion-option>
+            <ion-option value="4">4</ion-option>
+            <ion-option value="5">5</ion-option>
+            <ion-option value="6">6</ion-option>
+            <ion-option value="7">7</ion-option>
+            <ion-option value="8">8</ion-option>
+            <ion-option value="9">9</ion-option>
+          </ion-select>
+        </ion-item>
+        
+      </ion-col>
+      <ion-col col-4>
+
+        <ion-item>
+          <ion-label>limit</ion-label>
+          <ion-select type="number" [(ngModel)]="limit"  (onChange)="loadChart()">
+            <ion-option value="1">1</ion-option>
+            <ion-option value="10">10</ion-option>
+            <ion-option value="60">60</ion-option>
+            <ion-option value="120">120</ion-option>
+            <ion-option value="240">240</ion-option>
+            <ion-option value="480">480</ion-option>
+            <ion-option value="960">960</ion-option>
+            <ion-option value="1920">1920</ion-option>
+            <ion-option value="3620">3620</ion-option>
+          </ion-select>
+        </ion-item>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
 
   <ngx-charts-line-chart
   [view]="view"
@@ -58,6 +111,7 @@
   [yAxisLabel]="yAxisLabel"
   [autoScale]="autoScale"
   [animations]="animations"
+  [timeline]="timeline"
   (select)="onSelect($event)">
   </ngx-charts-line-chart>
 

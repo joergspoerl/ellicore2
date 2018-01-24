@@ -22,10 +22,11 @@ export class HomePage {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Country';
+  xAxisLabel = 'Time';
   showYAxisLabel = true;
-  yAxisLabel = 'Population';
+  yAxisLabel = 'Value';
   animations = false;
+  timeline = true;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -63,8 +64,8 @@ export class HomePage {
 
       let da = dataArray.map((v,i) => {
         return { 
-          name: i.toString(), 
-          value: parseFloat(v[0]) }
+          name: new Date(v[0]),// i.toString(),//v[0], 
+          value: parseFloat(v[1]) }
         });
 
       console.log("da", da)
@@ -74,17 +75,25 @@ export class HomePage {
 
       console.log("multi", this.multi)
 
-      
+      this.startTimer();
     });
   
   }
 
+  startTimer() {
+    var wait;
+    if (this.level == 0) wait = 1
+    if (this.level == 1) wait = 10
+    if (this.level == 2) wait = 60 * 60
+    
+    setTimeout(() => {
+      this.loadChart();
+    }, wait * 1000 );
+  }
+
   ionViewDidEnter() {
     console.log("ionViewDidEnter()")
-    this.interval = setInterval(() => {
-      this.loadChart();
-    }, 1000);
-  
+    this.startTimer();
   }
 
   ionViewDidLeave() {

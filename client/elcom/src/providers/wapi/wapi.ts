@@ -10,8 +10,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class WapiProvider {
 
-  baseUrl: string = '/api'; // proxy url
-//  baseUrl: string = 'http://192.168.1.10:8082'; // 
+//  baseUrl: string = '/api'; // proxy url
+  baseUrl: string = 'http://192.168.1.10:8082'; // 
 
   constructor(public http: HttpClient) {
     console.log('Hello WapiProvider Provider');
