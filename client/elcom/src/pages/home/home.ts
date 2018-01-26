@@ -19,11 +19,11 @@ export class HomePage {
   // options
   showXAxis = true;
   showYAxis = true;
-  gradient = false;
-  showLegend = true;
-  showXAxisLabel = true;
+  gradient = true;
+  showLegend = false;
+  showXAxisLabel = false;
   xAxisLabel = 'Time';
-  showYAxisLabel = true;
+  showYAxisLabel = false;
   yAxisLabel = 'Value';
   animations = false;
   timeline = true;
@@ -40,6 +40,7 @@ export class HomePage {
   limit = 120;
 
   interval = null
+  source = [];
 
   constructor(
     public navCtrl: NavController,
@@ -91,8 +92,16 @@ export class HomePage {
     }, wait * 1000 );
   }
 
+  loadSource() {
+    this.wapi.getSource().subscribe(data => {
+      console.log("getSource:", data);
+      this.source = data as Array<Array<string>>;
+    })
+  }
+
   ionViewDidEnter() {
     console.log("ionViewDidEnter()")
+    this.loadSource();
     this.startTimer();
   }
 

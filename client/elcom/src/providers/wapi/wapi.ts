@@ -22,5 +22,10 @@ export class WapiProvider {
       `${this.baseUrl}/api/v1/history/data/${level}/${source_id}/${limit}`)
   }
 
+  getSource() {
+    return this.http.get(
+      `${this.baseUrl}/api/v1/history/source/`)
+  }
+
 
 }
