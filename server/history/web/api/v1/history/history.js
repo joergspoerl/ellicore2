@@ -20,7 +20,7 @@ router.get('/data/:level/:source_id/:limit', function (req, res) {
 
 
 router.get('/source/', function (req, res) {
-    db.history.source(req.params.level, req.params.source_id, req.params.limit).then(
+    db.history.source().then(
         (rows) => {
             res.end( JSON.stringify(rows)  + '\n\r');
         },
