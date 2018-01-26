@@ -37,12 +37,15 @@ export class HomePage {
   autoScale = true;
 
   level = 0;
+  level_list = [{id: 0, name: "seconds"}, {id: 1, name: "minutes"}]
   source_id = 1;
   limit = 120;
   limit_list = [60, 120, 360, 1200, 3600]
 
   interval = null
   source = [];
+
+  segment = 'source'
 
   constructor(
     public navCtrl: NavController,
@@ -57,6 +60,10 @@ export class HomePage {
         }]
       }
     ]
+  }
+
+  segmentChanged(event) {
+
   }
 
   loadChart() {
