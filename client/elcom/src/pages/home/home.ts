@@ -16,6 +16,7 @@ export class HomePage {
 
   view: any[] = [700, 400];
 
+  theme = "dark"
   // options
   showXAxis = true;
   showYAxis = true;
@@ -29,7 +30,7 @@ export class HomePage {
   timeline = true;
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#0AA454', '#010A28', '#C7B42C', '#000000']
   };
 
   // line, area
@@ -38,6 +39,7 @@ export class HomePage {
   level = 0;
   source_id = 1;
   limit = 120;
+  limit_list = [60, 120, 360, 1200, 3600]
 
   interval = null
   source = [];

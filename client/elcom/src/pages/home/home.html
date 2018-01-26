@@ -4,14 +4,14 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content [class]="theme">
 
 
 
 
   <ion-grid>
       <ion-row style="height:300px">
-          <ion-col col-8>
+          <ion-col col-12>
 
               <!-- [view]="view" -->
 
@@ -34,10 +34,11 @@
             
             
           </ion-col>
-
-          <ion-col col-4>
-              <ion-scroll scrollY="true" style="height:100%">
-                  <ion-list  radio-group [(ngModel)]="source_id">
+      </ion-row>
+      <ion-row style="height:200px">
+          <ion-col col-8>
+              <ion-scroll scrollY="true" style="height:100%;" >
+                  <ion-list  radio-group [(ngModel)]="source_id" no-lines>
                       <ion-item *ngFor="let item of source">                
                         <ion-label>{{item[1]}}</ion-label>
                         <ion-radio value="{{item[0]}}"></ion-radio>
@@ -45,8 +46,20 @@
                     </ion-list>
               </ion-scroll>
           </ion-col>
-          </ion-row>
-          <ion-row>
+
+          <ion-col col-4>
+            <ion-scroll scrollY="true" style="height:100%;" >
+                <ion-list  radio-group [(ngModel)]="limit" no-lines>
+                    <ion-item *ngFor="let item of limit_list">                
+                      <ion-label>{{item}}</ion-label>
+                      <ion-radio value="{{item}}"></ion-radio>
+                    </ion-item>
+                  </ion-list>
+            </ion-scroll>
+        </ion-col>
+
+      </ion-row>
+          <!-- <ion-row>
             <ion-col col-12>
           
               <ion-item>
@@ -79,7 +92,7 @@
 
 
       </ion-col>
-      </ion-row>
+      </ion-row> -->
   </ion-grid>    
 
 </ion-content>
