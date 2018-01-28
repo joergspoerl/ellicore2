@@ -13,6 +13,7 @@
     <allow-intent href="geo:*" />
     <allow-navigation href="http://192.168.1.10/*" />
     <allow-navigation href="https://192.168.1.10/*" />
+    <allow-navigation href="http://63784.jrg.deneb.uberspace.de/*" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
