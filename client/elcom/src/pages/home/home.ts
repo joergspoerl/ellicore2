@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { single, multi} from './data'
 import { WapiProvider } from '../../providers/wapi/wapi'
-import { clearInterval } from 'timers';
+import { clearInterval, clearTimeout } from 'timers';
 import { NgProgress } from 'ngx-progressbar';
 
 @Component({
@@ -43,8 +43,10 @@ export class HomePage {
   limit = 120;
   limit_list = [60, 120, 360, 1200, 3600]
 
-  interval = null
+  timer = null
   source = [];
+  httpRequestTime = 0;
+  httpRequestSize = 0;
 
   segment = 'source'
 
@@ -70,11 +72,15 @@ export class HomePage {
 
   loadChart() {
     this.ngProgress.start();
+    let start = Date.now()
     this.wapi.getData(this.level,this.source_id,this.limit).subscribe(
-      data => {
-        console.log("getData:", data);
+      resp => {
+        this.httpRequestTime = Date.now() - start;
+        this.httpRequestSize = resp.body.toString().length
 
-        let dataArray = data as Array<Array<string>>;
+        console.log("getData:", resp.body);
+
+        let dataArray = resp.body as Array<Array<string>>;
 
         let da = dataArray.map((v, i) => {
           return {
@@ -95,6 +101,7 @@ export class HomePage {
       }),
 
       error => {
+        this.httpRequestTime = Date.now() - start;
         this.ngProgress.done(); 
         this.startTimer();
       }
@@ -106,9 +113,12 @@ export class HomePage {
     if (this.level == 1) wait = 10
     if (this.level == 2) wait = 60 * 60
     
-    setTimeout(() => {
-      this.loadChart();
-    }, wait * 1000 );
+    if (this.timer == null) {
+      this.timer = setTimeout(() => {
+        this.timer = null
+        this.loadChart();
+      }, wait * 1000 );
+    }
   }
 
   loadSource() {
@@ -126,7 +136,8 @@ export class HomePage {
 
   ionViewDidLeave() {
     console.log("ionViewDidLeave()")
-    clearInterval(this.interval)
+    clearTimeout(this.timer)
+    this.timer = null;
   }
 
 

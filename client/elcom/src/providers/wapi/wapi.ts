@@ -20,7 +20,8 @@ export class WapiProvider {
 
   getData(level:number,source_id:number,limit:number) {
     return this.http.get(
-      `${this.baseUrl}/api/v1/history/data/${level}/${source_id}/${limit}`)
+      `${this.baseUrl}/api/v1/history/data/${level}/${source_id}/${limit}`, 
+      {observe: 'response'})
   }
 
   getSource() {

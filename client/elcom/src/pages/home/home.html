@@ -1,94 +1,86 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Home</ion-title>
+    <ion-buttons end>
+      <button *ngIf="timer != null">T</button>
+      <button>{{httpRequestTime}} ms</button>
+      <button>{{httpRequestSize}} Byte</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1"
-[speed]="200" [showSpinner]="false" 
-[color]="'red'" [trickleSpeed]="250" [thick]="true" [ease]="'linear'"
-></ng-progress>
+<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="200" [showSpinner]="false" [color]="'red'"
+  [trickleSpeed]="250" [thick]="true" [ease]="'linear'"></ng-progress>
 
 <ion-content [class]="theme">
 
-<ion-grid>
-      <ion-row style="height:300px">
-          <ion-col col-12>
+
+  <ion-grid>
+    <ion-row style="height:300px">
+      <ion-col col-12>
 
 
-              <!-- [view]="view" -->
+        <!-- [view]="view" -->
 
-              <ngx-charts-line-chart
-              [scheme]="colorScheme"
-              [results]="multi"
-              [gradient]="gradient"
-              [xAxis]="showXAxis"
-              [yAxis]="showYAxis"
-              [legend]="showLegend"
-              [showXAxisLabel]="showXAxisLabel"
-              [showYAxisLabel]="showYAxisLabel"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              [autoScale]="autoScale"
-              [animations]="animations"
-              [timeline]="timeline"
-              (select)="onSelect($event)">
-              </ngx-charts-line-chart>
-            
-            
-          </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
+        <ngx-charts-line-chart [scheme]="colorScheme" [results]="multi" [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis"
+          [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel" [autoScale]="autoScale" [animations]="animations" [timeline]="timeline" (select)="onSelect($event)">
+        </ngx-charts-line-chart>
+
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
         <ion-segment [(ngModel)]="segment" color="primary" (ionChange)="segmentChanged($event)">
           <ion-segment-button value="source">
             Source
           </ion-segment-button>
           <ion-segment-button value="level">
-              level
+            level
           </ion-segment-button>
           <ion-segment-button value="limit">
             Limit
           </ion-segment-button>
         </ion-segment>
-        </ion-col>
-      </ion-row>
-      <ion-row style="height:200px">
-          <ion-col col-12 *ngIf="segment == 'source'" >
-              <ion-scroll scrollY="true" style="height:100%;" >
-                  <ion-list  radio-group [(ngModel)]="source_id" no-lines>
-                      <ion-item *ngFor="let item of source">                
-                        <ion-label>{{item[1]}}</ion-label>
-                        <ion-radio value="{{item[0]}}"></ion-radio>
-                      </ion-item>
-                    </ion-list>
-              </ion-scroll>
-          </ion-col>
+      </ion-col>
+    </ion-row>
+    <ion-row style="height:200px">
+      <ion-col col-12 *ngIf="segment == 'source'">
+        <ion-scroll scrollY="true" style="height:100%;">
+          <ion-list radio-group [(ngModel)]="source_id" no-lines>
+            <ion-item *ngFor="let item of source">
+              <ion-label>{{item[1]}}</ion-label>
+              <ion-radio value="{{item[0]}}"></ion-radio>
+            </ion-item>
+          </ion-list>
+        </ion-scroll>
+      </ion-col>
 
-          <ion-col col-12  *ngIf="segment == 'level'">
-              <ion-scroll scrollY="true" style="height:100%;" >
-                  <ion-list  radio-group [(ngModel)]="level" no-lines>
-                      <ion-item *ngFor="let item of level_list">                
-                        <ion-label>{{item.name}}</ion-label>
-                        <ion-radio value="{{item.id}}"></ion-radio>
-                      </ion-item>
-                    </ion-list>
-              </ion-scroll>
-          </ion-col>
-  
-          <ion-col col-12  *ngIf="segment == 'limit'">
-            <ion-scroll scrollY="true" style="height:100%;" >
-                <ion-list  radio-group [(ngModel)]="limit" no-lines>
-                    <ion-item *ngFor="let item of limit_list">                
-                      <ion-label>{{item}}</ion-label>
-                      <ion-radio value="{{item}}"></ion-radio>
-                    </ion-item>
-                  </ion-list>
-            </ion-scroll>
-        </ion-col>
+      <ion-col col-12 *ngIf="segment == 'level'">
+        <ion-scroll scrollY="true" style="height:100%;">
+          <ion-list radio-group [(ngModel)]="level" no-lines>
+            <ion-item *ngFor="let item of level_list">
+              <ion-label>{{item.name}}</ion-label>
+              <ion-radio value="{{item.id}}"></ion-radio>
+            </ion-item>
+          </ion-list>
+        </ion-scroll>
+      </ion-col>
 
-      </ion-row>
-          <!-- <ion-row>
+      <ion-col col-12 *ngIf="segment == 'limit'">
+        <ion-scroll scrollY="true" style="height:100%;">
+          <ion-list radio-group [(ngModel)]="limit" no-lines>
+            <ion-item *ngFor="let item of limit_list">
+              <ion-label>{{item}}</ion-label>
+              <ion-radio value="{{item}}"></ion-radio>
+            </ion-item>
+          </ion-list>
+        </ion-scroll>
+      </ion-col>
+
+    </ion-row>
+    <!-- <ion-row>
             <ion-col col-12>
           
               <ion-item>
@@ -122,6 +114,6 @@
 
       </ion-col>
       </ion-row> -->
-  </ion-grid>    
+  </ion-grid>
 
 </ion-content>
