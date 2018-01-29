@@ -3,9 +3,8 @@
 SSH Tunnel to uberspace
 =======================
 
-ssh -R 63784:127.0.0.1:8082 jrg@deneb.uberspace.de
-
-ssh -R 63784:127.0.0.1:8082 jrg@deneb.uberspace.de -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=60
+autossh -R 63784:127.0.0.1:8082 jrg@deneb.uberspace.de
+autossh -R 63784:127.0.0.1:8082 jrg@deneb.uberspace.de -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=60
 
 
 
@@ -13,3 +12,4 @@ example URL
 ===========
 
 curl -v http://63784.jrg.deneb.uberspace.de/api/v1/history/data/1/4/1
+curl -v http://63784.jrg.deneb.uberspace.de/api/v1/history/data/0/1/100000 -w '\nLookup time:\t%{time_namelookup}\nConnect time:\t%{time_connect}\nPreXfer time:\t%{time_pretransfer}\nStartXfer time:\t%{time_starttransfer}\n\nTotal time:\t%{time_total}\n' -o /dev/null 
