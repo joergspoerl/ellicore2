@@ -4,14 +4,17 @@
   </ion-navbar>
 </ion-header>
 
+<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1"
+[speed]="200" [showSpinner]="false" 
+[color]="'red'" [trickleSpeed]="250" [thick]="true" [ease]="'linear'"
+></ng-progress>
+
 <ion-content [class]="theme">
 
-
-
-
-  <ion-grid>
+<ion-grid>
       <ion-row style="height:300px">
           <ion-col col-12>
+
 
               <!-- [view]="view" -->
 

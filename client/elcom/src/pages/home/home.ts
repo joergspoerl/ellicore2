@@ -4,6 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { single, multi} from './data'
 import { WapiProvider } from '../../providers/wapi/wapi'
 import { clearInterval } from 'timers';
+import { NgProgress } from 'ngx-progressbar';
 
 @Component({
   selector: 'page-home',
@@ -50,6 +51,7 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public wapi: WapiProvider,
+    public ngProgress: NgProgress,
   ) {
     //Object.assign(this, {single, multi})   
     this.multi = [
@@ -67,27 +69,35 @@ export class HomePage {
   }
 
   loadChart() {
-    this.wapi.getData(this.level,this.source_id,this.limit).subscribe(data => {
-      console.log("getData:", data);
+    this.ngProgress.start();
+    this.wapi.getData(this.level,this.source_id,this.limit).subscribe(
+      data => {
+        console.log("getData:", data);
 
-      let dataArray = data as Array<Array<string>>;
+        let dataArray = data as Array<Array<string>>;
 
-      let da = dataArray.map((v,i) => {
-        return { 
-          name: new Date(v[0]),// i.toString(),//v[0], 
-          value: parseFloat(v[1]) }
+        let da = dataArray.map((v, i) => {
+          return {
+            name: new Date(v[0]),// i.toString(),//v[0], 
+            value: parseFloat(v[1])
+          }
         });
 
-      console.log("da", da)
+        console.log("da", da)
 
-      this.multi[0].series = da
-      this.multi = [...this.multi];  // copy array
+        this.multi[0].series = da
+        this.multi = [...this.multi];  // copy array
 
-      console.log("multi", this.multi)
+        console.log("multi", this.multi)
 
-      this.startTimer();
-    });
-  
+        this.ngProgress.done();
+        this.startTimer();
+      }),
+
+      error => {
+        this.ngProgress.done(); 
+        this.startTimer();
+      }
   }
 
   startTimer() {

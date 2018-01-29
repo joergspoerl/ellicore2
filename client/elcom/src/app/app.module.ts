@@ -14,7 +14,9 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgProgressModule } from 'ngx-progressbar';
+
 import { WapiProvider } from '../providers/wapi/wapi';
 
 
@@ -32,6 +34,7 @@ import { WapiProvider } from '../providers/wapi/wapi';
     IonicModule.forRoot(MyApp),
     NgxChartsModule,
     HttpClientModule,
+    NgProgressModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
