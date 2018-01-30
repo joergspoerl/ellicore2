@@ -12,29 +12,37 @@ function get_value (source) {
         client = https;
     }
 
-    client.get(u, (resp) => {
-        let data = ''
+    try {
 
-        // A chunk of data has been recieved.
-        resp.on('data', (chunk) => {
-            data += chunk;
+        client.get(u, (resp) => {
+            let data = ''
+    
+            // A chunk of data has been recieved.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+     
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
+                // console.log(JSON.parse(data));            
+                console.log(data);
+    
+                if (source.func && source.func != "") {
+                    data = eval(source.func)(data)
+                }
+    
+                db.history.insert_value(source, data)  
+            });
+     
+        }).on("error", (err) => {
+        console.log("Error: " + err.message);
         });
- 
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
-            // console.log(JSON.parse(data));            
-            console.log(data);
-
-            if (source.func && source.func != "") {
-                data = eval(source.func)(data)
-            }
-
-            db.history.insert_value(source, data)  
-        });
- 
-    }).on("error", (err) => {
-    console.log("Error: " + err.message);
-    });
+    
+    } catch (error) {
+    
+        console.log("Error: " + err.message);
+        
+    }
 
 }
 
