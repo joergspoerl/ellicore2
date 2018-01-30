@@ -6,6 +6,9 @@ import { WapiProvider } from '../../providers/wapi/wapi'
 import { clearInterval, clearTimeout } from 'timers';
 import { NgProgress } from 'ngx-progressbar';
 
+import "rxjs/add/operator/timeout";
+import "rxjs/add/operator/catch";
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -73,7 +76,12 @@ export class HomePage {
   loadChart() {
     this.ngProgress.start();
     let start = Date.now()
-    this.wapi.getData(this.level,this.source_id,this.limit).subscribe(
+    this.wapi.getData(this.level,this.source_id,this.limit)
+    .timeout(50000)
+    .catch(
+      (error, source) => { throw ("MyTimeout")}
+    )  
+    .subscribe(
       resp => {
         this.httpRequestTime = Date.now() - start;
         this.httpRequestSize = resp.body.toString().length
@@ -98,13 +106,14 @@ export class HomePage {
 
         this.ngProgress.done();
         this.startTimer();
-      }),
+      },
 
       error => {
         this.httpRequestTime = Date.now() - start;
         this.ngProgress.done(); 
         this.startTimer();
-      }
+      })
+    
   }
 
   startTimer() {
