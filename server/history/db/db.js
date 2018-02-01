@@ -126,6 +126,29 @@ c.history.data  = (level, source_id, limit) => {
 }
 
 
+c.history.delta  = (level, source_id, time_from, limit) => {
+    return new Promise((resolve, reject) => {
+        var sql = 
+            `
+            SELECT time, value from data
+            WHERE 
+                 level     = :level
+             AND source_id = :source_id
+             AND time > :time_from
+            ORDER BY id DESC
+            LIMIT ` + limit
+            
+    
+        c.query(sql, { level: level, source_id: source_id, time_from: time_from, limit: limit  }, { useArray: true, metadata: true,  }, function(err, rows) {
+            if (err)
+                reject (err);
+            //console.log("rows", rows)
+            resolve(rows)
+        });    
+    })
+}
+
+
 
 
 
