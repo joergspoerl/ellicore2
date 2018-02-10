@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>Home</ion-title>
     <ion-buttons end>
-      <button *ngIf="timer != null">T</button>
+      <button *ngIf="timer != null" (click)="loadChart()">T</button>
       <button>{{httpRequestTime}} ms</button>
       <button>{{httpRequestSize}} Byte</button>
     </ion-buttons>

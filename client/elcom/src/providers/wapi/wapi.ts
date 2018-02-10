@@ -24,6 +24,12 @@ export class WapiProvider {
       {observe: 'response'})
   }
 
+  getDelta(level:number,source_id:number,time_from:Date, limit:number) {
+    return this.http.get(
+      `${this.baseUrl}/api/v1/history/delta/${level}/${source_id}/${time_from}/${limit}`, 
+      {observe: 'response'})
+  }
+
   getSource() {
     return this.http.get(
       `${this.baseUrl}/api/v1/history/source/`)

@@ -1,0 +1,114 @@
+[
+    {
+        "isRoot": false,
+        "OUID": 1,
+        "Name": "SolSystem",
+        "Description": "DC=SolSystem,DC=gal",
+        "ADGUID": "d6be0f496ef23b42b587b308a387ca57",
+        "ParentADGUID": null,
+        "DistinguishedName": null,
+        "SyncObjectID": 10002,
+        "Child": [
+            {
+                "isRoot": false,
+                "OUID": 1008,
+                "Name": "Company",
+                "Description": "Describe it",
+                "ADGUID": "adfe872474443e4082fb7543eb76f93c",
+                "ParentADGUID": "d6be0f496ef23b42b587b308a387ca57",
+                "DistinguishedName": "OU=Company,DC=SolSystem,DC=gal",
+                "SyncObjectID": 10002,
+                "Child": [
+                    {
+                        "isRoot": false,
+                        "OUID": 3008,
+                        "Name": "External",
+                        "Description": "External people",
+                        "ADGUID": "e9332a76c9b7224a83b768c34f0bc26f",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=External,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    },
+                    {
+                        "isRoot": false,
+                        "OUID": 3009,
+                        "Name": "Flummi",
+                        "Description": "Boing Boing",
+                        "ADGUID": "536582c69e21b747b5c066b0f140aee7",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=Flummi,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    },
+                    {
+                        "isRoot": false,
+                        "OUID": 1009,
+                        "Name": "HR",
+                        "Description": "Hier kommt eine ganz lange Beschreibung hin, um zu sehen wie daß dann aussieht.",
+                        "ADGUID": "acf7236eec43df448e4171218e7b525b",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=HR,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    },
+                    {
+                        "isRoot": false,
+                        "OUID": 1010,
+                        "Name": "IT",
+                        "Description": "",
+                        "ADGUID": "9bf981919e0da848884460bc9f3643e6",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=IT,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    },
+                    {
+                        "isRoot": false,
+                        "OUID": 1011,
+                        "Name": "Sales",
+                        "Description": "",
+                        "ADGUID": "b41f2838b6e6314c99cc38972053b9ec",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=Sales,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    },
+                    {
+                        "isRoot": false,
+                        "OUID": 1012,
+                        "Name": "Server",
+                        "Description": "Operational Servers",
+                        "ADGUID": "3bb2f0b4a0191c41b273aba3327808d5",
+                        "ParentADGUID": "adfe872474443e4082fb7543eb76f93c",
+                        "DistinguishedName": "OU=Server,OU=Company,DC=SolSystem,DC=gal",
+                        "SyncObjectID": 10002,
+                        "Child": []
+                    }
+                ]
+            },
+            {
+                "isRoot": false,
+                "OUID": 3011,
+                "Name": "External",
+                "Description": "",
+                "ADGUID": "9af41124196aa945aef65b8e16924c6f",
+                "ParentADGUID": "d6be0f496ef23b42b587b308a387ca57",
+                "DistinguishedName": "OU=External,DC=SolSystem,DC=gal",
+                "SyncObjectID": 20009,
+                "Child": []
+            }
+        ]
+    },
+    {
+        "isRoot": false,
+        "OUID": 3010,
+        "Name": "Unassigned",
+        "Description": "Test",
+        "ADGUID": "UnassignedGUID",
+        "ParentADGUID": null,
+        "DistinguishedName": null,
+        "SyncObjectID": 20008,
+        "Child": []
+    }
+]

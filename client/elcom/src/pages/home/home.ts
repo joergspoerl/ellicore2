@@ -8,6 +8,7 @@ import { NgProgress } from 'ngx-progressbar';
 
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/catch";
+import { HttpResponse } from '@angular/common/http/src/response';
 
 @Component({
   selector: 'page-home',
@@ -41,7 +42,7 @@ export class HomePage {
   autoScale = true;
 
   level = 0;
-  level_list = [{id: 0, name: "seconds"}, {id: 1, name: "minutes"}]
+  level_list = [{id: 0, name: "seconds"}, {id: 1, name: "minutes"}, {id: 2, name: "hours"}]
   source_id = 1;
   limit = 120;
   limit_list = [60, 120, 360, 1200, 3600]
@@ -82,7 +83,7 @@ export class HomePage {
       (error, source) => { throw ("MyTimeout")}
     )  
     .subscribe(
-      resp => {
+      (resp:HttpResponse<Object>) => {
         this.httpRequestTime = Date.now() - start;
         this.httpRequestSize = resp.body.toString().length
 
@@ -93,6 +94,7 @@ export class HomePage {
         let da = dataArray.map((v, i) => {
           return {
             name: new Date(v[0]),// i.toString(),//v[0], 
+            time: v[0], // for internal use 
             value: parseFloat(v[1])
           }
         });
@@ -116,9 +118,58 @@ export class HomePage {
     
   }
 
+  loadChartDelta() {
+    this.ngProgress.start();
+    let start = Date.now()
+    let time_from = this.multi[0].series[0].time;
+    console.log(" this.multi[0].series[this.multi[0].series.length - 1]",  this.multi[0].series[this.multi[0].series.length - 1])
+    console.log("time_from: ", time_from)
+    this.wapi.getDelta(this.level,this.source_id,time_from,this.limit)
+    .timeout(50000)
+    .catch(
+      (error, source) => { throw ("MyTimeout")}
+    )  
+    .subscribe(
+      (resp:HttpResponse<Object>) => {
+        this.httpRequestTime = Date.now() - start;
+        this.httpRequestSize = resp.body.toString().length
+
+        console.log("getData:", resp.body);
+
+        let dataArray = resp.body as Array<Array<string>>;
+
+        let da = dataArray.map((v, i) => {
+          return {
+            name: new Date(v[0]),// i.toString(),//v[0],
+            time: v[0], // for internal use 
+            value: parseFloat(v[1])
+          }
+        });
+
+        console.log("da", da)
+
+        let l = da.length
+        //this.multi[0].series.unshift(da)
+        //this.multi[0].series = this.multi[0].series.splice(0,l)
+        this.multi = [...this.multi];  // copy array
+
+        console.log("multi", this.multi)
+
+        this.ngProgress.done();
+        this.startTimer();
+      },
+
+      error => {
+        this.httpRequestTime = Date.now() - start;
+        this.ngProgress.done(); 
+        this.startTimer();
+      })
+    
+  }
+
   startTimer() {
     var wait;
-    if (this.level == 0) wait = 1
+    if (this.level == 0) wait = 5
     if (this.level == 1) wait = 10
     if (this.level == 2) wait = 60 * 60
     
@@ -140,7 +191,8 @@ export class HomePage {
   ionViewDidEnter() {
     console.log("ionViewDidEnter()")
     this.loadSource();
-    this.startTimer();
+    this.loadChart();
+    //this.startTimer();
   }
 
   ionViewDidLeave() {

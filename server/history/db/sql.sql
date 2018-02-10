@@ -212,3 +212,60 @@ END;$$
 DELIMITER ;
 /* --------------------------------------------------------------- */
 
+
+
+
+
+
+
+/* --------------------------------------------------------------- 
+    store procedure calc_level2
+
+
+*/
+
+USE `history`;
+DROP procedure IF EXISTS `calc_level2`;
+
+DELIMITER $$
+USE `history`$$
+CREATE DEFINER=`root`@`192.168.1.%` PROCEDURE `calc_level2`()
+
+BEGIN
+
+    /* --------------------------------------------------------------- 
+    agregate on hour base
+    all over 24 hours in past
+    delete level 1 data
+    */
+    SET @time_range = now() - INTERVAL 24 HOUR;               
+                                            
+    INSERT INTO data (time, source_id, value, min, max, count, level)
+    SELECT
+        DATE_FORMAT(time, '%Y-%m-%d %H') AS date_trunc,
+        source_id  as source_id,
+        AVG(value) as value,
+        MIN(min)   as min,
+        MAX(max)   as max,                                                                                     
+        SUM(count) as count,
+        2          as LEVEL
+    FROM
+        data
+    WHERE time < @time_range                                                                                    
+    AND level = 1
+    GROUP BY date_trunc, source_id;
+
+    DELETE FROM data
+    WHERE time < @time_range                                                                                    
+    AND level = 1;
+
+END;$$
+
+DELIMITER ;
+/* --------------------------------------------------------------- */
+
+
+
+
+
+
