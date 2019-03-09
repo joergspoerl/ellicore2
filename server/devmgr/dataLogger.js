@@ -16,6 +16,7 @@ var core = require("./devmgr.js");
 
 setInterval(() => {
     dataLogger.info("BMV: ", JSON.stringify(core.devices.bmv.data));
+    dataLogger.info("mppts: ", JSON.stringify(core.devices.mppt.data));
 }, 2000)
 
 

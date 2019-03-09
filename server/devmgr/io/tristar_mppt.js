@@ -2,6 +2,23 @@
 
 // Tristar MODBUS
 
+var roundObj = function(obj) {
+    for(var i in obj) {
+        if(obj.hasOwnProperty(i)){
+            //console.log("-", obj[i])
+            if (!isNaN(obj[i])) {
+                obj[i] = Math.round(obj[i] * 100) / 100; 
+            }
+            if (typeof obj[i] === 'object') {
+                roundObj(obj[i]);
+            }
+        }
+    }
+    return obj;
+};
+
+
+
 function tristar_mppt(tristar_address) {
 
     var self = this;
@@ -38,7 +55,7 @@ function tristar_mppt(tristar_address) {
 
         client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
 
-            self.data = readTristar(tristarHoldingRegister);
+            self.data = roundObj(readTristar(tristarHoldingRegister));
 
         }, console.error);
     }, 2000);
