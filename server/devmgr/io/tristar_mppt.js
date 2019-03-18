@@ -182,14 +182,14 @@ function tristar_mppt(tristar_address) {
                 // battery sense voltage, filtered
                 battsV:       hr.register[24] * v_scale,
                 battsSensedV: hr.register[26] * v_scale,
-                battsI:       hr.register[28] * v_scale,
+                battsI:       hr.register[28] * i_scale,
                 arrayV:       hr.register[27] * v_scale,
-                arrayI:       hr.register[29] * v_scale,
+                arrayI:       hr.register[29] * i_scale,
                 statenum:     hr.register[50],
                 hsTemp:       hr.register[35],
                 rtsTemp:      hr.register[36],
-                outPower:     hr.register[58] * v_scale,
-                inPower:      hr.register[59] * v_scale,
+                outPower:     hr.register[58] * p_scale,
+                inPower:      hr.register[59] * p_scale,
             },
 
             today: {
@@ -200,7 +200,7 @@ function tristar_mppt(tristar_address) {
                 Ahc_daily:      hr.register[67] * 0.1,
                 whc_daily:      hr.register[68],
                 flags_daily:    hr.register[69],
-                Pout_max_daily: hr.register[70] * v_scale,
+                Pout_max_daily: hr.register[70] * p_scale,
                 Tb_min_daily:   hr.register[71],
                 Tb_max_daily:   hr.register[72],
                 fault_daily:    hr.register[73],
