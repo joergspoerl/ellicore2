@@ -2,7 +2,7 @@ var log4js = require('log4js');
 log4js.configure({
     appenders: {
       out: { type: 'stdout' },
-      app: { type: 'dateFile', filename: 'dataLogger.log', alwaysIncludePattern: true, keepFileExt: true,  compress: true }
+      app: { type: 'dateFile', filename: 'log/dataLogger.log', alwaysIncludePattern: true, keepFileExt: true,  compress: true }
     },
     categories: {
       default: { appenders: [ 'out', 'app' ], level: 'debug' }

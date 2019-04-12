@@ -1,0 +1,14 @@
+[Unit]
+Description=My mqtt autossh service
+After=network.target
+
+[Service]
+ExecStart=/home/pi/dev/ellicore2/server/devmgr/start-mqtt-autossh.sh
+WorkingDirectory=/home/pi/dev/ellicore2/server/devmgr
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=My device manager service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node main
+WorkingDirectory=/home/pi/dev/ellicore2/server/devmgr
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
