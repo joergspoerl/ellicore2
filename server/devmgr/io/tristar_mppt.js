@@ -132,8 +132,8 @@ function tristar_mppt(tristar_address) {
         var I_PU_hi = hr.register[2];
         var I_PU_lo = hr.register[3];
 
-        var V_PU = V_PU_hi + V_PU_lo;
-        var I_PU = I_PU_hi + I_PU_lo;
+        var V_PU = V_PU_hi + V_PU_lo / Math.pow(2, 16);
+        var I_PU = I_PU_hi + I_PU_lo / Math.pow(2, 16);
 
         var v_scale = V_PU * Math.pow(2, -15);
         var i_scale = I_PU * Math.pow(2, -15);
