@@ -141,6 +141,17 @@ function tristar_mppt(tristar_address) {
 
         return {
 
+            scale: {
+                V_PU_hi: V_PU_hi,
+                V_PU_lo: V_PU_lo,
+                I_PU_hi: I_PU_hi,
+                I_PU_lo: I_PU_lo,
+                V_PU: V_PU,
+                v_scale: v_scale,
+                i_scale, i_scale,
+                p_scale, p_scale
+            },
+
             adc: {
                 // Filtered ADC
                 adc_vb_f_med:    hr.register[24] * v_scale,
