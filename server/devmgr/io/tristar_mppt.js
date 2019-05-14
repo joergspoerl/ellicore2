@@ -55,7 +55,12 @@ function tristar_mppt(tristar_address) {
 
         client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
 
-            self.data = roundObj(readTristar(tristarHoldingRegister));
+            var values = readTristar(tristarHoldingRegister);
+            roundObj(values.adc);
+            roundObj(values.batt);
+            roundObj(values.temp);
+            roundObj(values.today);
+            self.data = values;
 
         }, console.error);
     }, 2000);
