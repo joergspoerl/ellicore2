@@ -157,6 +157,21 @@ function tristar_mppt(tristar_address) {
                 p_scale, p_scale
             },
 
+            battRegister: {
+                // battery sense voltage, filtered
+                battsV:       hr.register[24],
+                battsSensedV: hr.register[26],
+                battsI:       hr.register[28],
+                arrayV:       hr.register[27],
+                arrayI:       hr.register[29],
+                statenum:     hr.register[50],
+                hsTemp:       hr.register[35],
+                rtsTemp:      hr.register[36],
+                outPower:     hr.register[58],
+                inPower:      hr.register[59],
+            },
+
+
             adc: {
                 // Filtered ADC
                 adc_vb_f_med:    hr.register[24] * v_scale,
