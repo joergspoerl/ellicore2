@@ -17,12 +17,14 @@ var roundObj = function(obj) {
     return obj;
 };
 
-var signedToInteger = function(value) {
+// helper function to convert signed value to integer
+function signedToInteger(value) {
     if ((value & 0x8000) > 0) {
         value = value - 0x10000;
-     }
-     return value;
+        }
+        return value;
 }
+
 
 function tristar_mppt(tristar_address) {
 
@@ -133,7 +135,7 @@ function tristar_mppt(tristar_address) {
 
 
     function readTristar(hr) {
-
+        
         // for all indexes, subtract 1 from what's in the manual
 
         // scaling values
@@ -179,7 +181,7 @@ function tristar_mppt(tristar_address) {
 
             adc: {
                 // Filtered ADC
-                adc_vb_f_med:    signedToIntegerhr.register[24] * v_scale,
+                adc_vb_f_med:    signedToInteger(hr.register[24]) * v_scale,
                 adc_vbterm_f:    hr.register[25] * v_scale,
                 adc_vbs_f:       hr.register[26] * v_scale,
                 adc_va_f:        hr.register[27] * v_scale,
