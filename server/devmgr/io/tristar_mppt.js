@@ -17,7 +17,12 @@ var roundObj = function(obj) {
     return obj;
 };
 
-
+var signedToInteger = function(value) {
+    if ((value & 0x8000) > 0) {
+        value = value - 0x10000;
+     }
+     return value;
+}
 
 function tristar_mppt(tristar_address) {
 
@@ -174,7 +179,7 @@ function tristar_mppt(tristar_address) {
 
             adc: {
                 // Filtered ADC
-                adc_vb_f_med:    hr.register[24] * v_scale,
+                adc_vb_f_med:    signedToIntegerhr.register[24] * v_scale,
                 adc_vbterm_f:    hr.register[25] * v_scale,
                 adc_vbs_f:       hr.register[26] * v_scale,
                 adc_va_f:        hr.register[27] * v_scale,
@@ -196,8 +201,8 @@ function tristar_mppt(tristar_address) {
 
             state: {
                 // status
-                adc_vb_f_1m:  hr.register[38], // Battery voltage, filtered(τ ≈ 1min) V √ n·V_PU·2 - 15
-                adc_ib_f_1m:  hr.register[39], // Charging current, filtered(τ ≈       1min)    A √ n·I_PU·2 - 15
+                adc_vb_f_1m:  signedToInteger(hr.register[38]), // Battery voltage, filtered(τ ≈ 1min) V √ n·V_PU·2 - 15
+                adc_ib_f_1m:  signedToInteger(hr.register[39]), // Charging current, filtered(τ ≈       1min)    A √ n·I_PU·2 - 15
                 vb_min:       hr.register[40], // Minimum battery voltage V √ n·V_PU·2 - 15
                 vb_max:       hr.register[41], // Minimum battery voltage V √ n·V_PU·2 - 15
                 hourmeter_HI: hr.register[42], // hourmeter, HI word h -
@@ -211,16 +216,16 @@ function tristar_mppt(tristar_address) {
 
             batt: {
                 // battery sense voltage, filtered
-                battsV:       hr.register[24] * v_scale,
-                battsSensedV: hr.register[26] * v_scale,
-                battsI:       hr.register[28] * i_scale,
-                arrayV:       hr.register[27] * v_scale,
-                arrayI:       hr.register[29] * i_scale,
+                battsV:       signedToInteger(hr.register[24]) * v_scale,
+                battsSensedV: signedToInteger(hr.register[26]) * v_scale,
+                battsI:       signedToInteger(hr.register[28]) * i_scale,
+                arrayV:       signedToInteger(hr.register[27]) * v_scale,
+                arrayI:       signedToInteger(hr.register[29]) * i_scale,
                 statenum:     hr.register[50],
                 hsTemp:       hr.register[35],
                 rtsTemp:      hr.register[36],
-                outPower:     hr.register[58] * p_scale,
-                inPower:      hr.register[59] * p_scale,
+                outPower:     signedToInteger(hr.register[58]) * p_scale,
+                inPower:      signedToInteger(hr.register[59]) * p_scale,
             },
 
             today: {
