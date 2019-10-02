@@ -1,5 +1,5 @@
 ﻿var modbus = require('jsmodbus');
-
+const net = require('net')
 // Tristar MODBUS
 
 var roundObj = function(obj) {
@@ -33,48 +33,61 @@ function tristar_mppt(tristar_address) {
 
 
     // create a modbus client
-    var client = modbus.client.tcp.complete({
+    const options = {
         'host': tristar_address, //192.168.1.32 TSMPPT10480676
         'port': 502,
-        'autoReconnect': true,
-        'reconnectTimeout': 4000,
-        'timeout': 8000,
-        'unitId': 1
-    });
+        // 'autoReconnect': true,
+        // 'reconnectTimeout': 4000,
+        // 'timeout': 8000,
+    }
+    const socket = new net.Socket()
+
+    var unitId = 1;
+    var client = new modbus.client.TCP(socket, unitId);
 
 
     var tristarHoldingRegister = {};
 
-    client.connect();
-
-    // reconnect with client.reconnect()
-
-    client.on('connect', function () {
-
-        console.log("begin connect");
-
-    });
 
 
     setInterval(function () {
 
-        //console.log("begin setTimout");
+        socket.connect(options)
+
+        // reconnect with client.reconnect()  
+
+    }, 2000);
+
+
+    socket.on('connect', function () {
+    
+        console.log("begin connect");
 
         client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
 
-            var values = readTristar(tristarHoldingRegister);
+            // transform in older format
+            var hr = { register: tristarHoldingRegister.response._body.valuesAsArray};
+
+            var values = readTristar(hr);
             roundObj(values.adc);
             roundObj(values.batt);
             roundObj(values.temp);
             roundObj(values.today);
             self.data = values;
 
-        }, console.error);
-    }, 2000);
+            console.log("end connect", self.data);
+            socket.end();
+    
+        }).catch (error => {
+            console.log("ERROR in readHoldingRegisters", error)
+            socket.end();
+        });
+
+        
+    });
 
 
-
-    client.on('error', function (err) {
+    socket.on('error', function (err) {
         console.log(err);
     })
 
@@ -134,7 +147,7 @@ function tristar_mppt(tristar_address) {
     }
 
 
-    function readTristar(hr) {
+    function    readTristar(hr) {
         
         // for all indexes, subtract 1 from what's in the manual
 
