@@ -61,8 +61,6 @@ function tristar_mppt(tristar_address) {
 
     socket.on('connect', function () {
     
-        console.log("begin connect");
-
         client.readHoldingRegisters(0, 80).then(function (tristarHoldingRegister) {
 
             // transform in older format
@@ -75,7 +73,6 @@ function tristar_mppt(tristar_address) {
             roundObj(values.today);
             self.data = values;
 
-            console.log("end connect", self.data);
             socket.end();
     
         }).catch (error => {
