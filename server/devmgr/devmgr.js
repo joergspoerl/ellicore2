@@ -3,8 +3,8 @@
 var victron_bmv = require("./io/victron_bmv");
 var bmv = new victron_bmv("/dev/ttyUSB1")
 
-var victron_mk2 = require("./io/victron_mk2");
-var mk2 = new victron_mk2("/dev/ttyUSB0")
+// var victron_mk2 = require("./io/victron_mk2");
+// var mk2 = new victron_mk2("/dev/ttyUSB0")
 
 var tristar_mppt = require("./io/tristar_mppt");
 //var mppt = new tristar_mppt("192.168.20.242");
@@ -17,7 +17,7 @@ const raspi   = require('raspi');
 var core = {
     devices: {
         bmv:   bmv,
-        mk2:   mk2,
+//        mk2:   mk2,
         mppt:  mppt,
 //        disp1: {},
 //        disp2: {},
