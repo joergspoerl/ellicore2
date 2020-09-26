@@ -15,7 +15,7 @@ function round (number, decimal) {
 }
 
 
-function victron_mk2 () {
+function victron_mk2 (serialPortDevice) {
     console.log("new instant 'victron_mk2'")
     var self = this;
     var debug_log = false;
@@ -35,7 +35,7 @@ function victron_mk2 () {
     }
 
     // open serial port
-    var port = new SerialPort('/dev/ttyUSB1', {
+    var port = new SerialPort(serialPortDevice, {
         baudRate: 2400,
        // parser: SerialPort.parsers.byteDelimiter([255])
     }, async (error) => {
