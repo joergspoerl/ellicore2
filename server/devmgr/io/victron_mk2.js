@@ -18,8 +18,8 @@ function round (number, decimal) {
 function victron_mk2 (serialPortDevice) {
     console.log("new instant 'victron_mk2'")
     var self = this;
-    var debug_log = false;
-    var in_buf = new Buffer('');     // input buffer
+    var debug_log = true;
+    var in_buf = Buffer.from('');     // input buffer
     var recive         = () => {};   // common callback pointer
     var recive_resolve = () => {};   // common promise resolve pointer
 
@@ -90,9 +90,9 @@ function victron_mk2 (serialPortDevice) {
     
     function create_frame(command, data) {
         var len = command.length + data.length + 1;
-        var buf = new Buffer([len, [0xFF]]);
-        buf = Buffer.concat([buf, new Buffer(command)]);
-        buf = Buffer.concat([buf, new Buffer(data)]);
+        var buf = Buffer.from([len, [0xFF]]);
+        buf = Buffer.concat([buf, Buffer.from(command)]);
+        buf = Buffer.concat([buf, Buffer.from(data)]);
     
         var sum = 0;
         for (var i = 0; i < buf.length; i++) {
@@ -100,7 +100,7 @@ function victron_mk2 (serialPortDevice) {
         }
     
         sum = 256 - sum % 256;
-        buf = Buffer.concat([buf, new Buffer([sum])]);
+        buf = Buffer.concat([buf, Buffer.from([sum])]);
     
     //    console.log("SEND -> ", buf, buf.toString(), 'checksum',sum);
         frame_debug("SEND ->", buf);
@@ -155,7 +155,7 @@ function victron_mk2 (serialPortDevice) {
                 port.flush(() => {
                     recive = cb;                 // set common callback
                     recive_resolve = resolve;
-                    in_buf = new Buffer("");     // clear input buffer
+                    in_buf = Buffer.from("");     // clear input buffer
                 })
             })
         } catch (exception) {
@@ -362,8 +362,8 @@ function victron_mk2 (serialPortDevice) {
 
             var ubat = bp.unpack('<H', frame, 7);
             //if (frame[11] < 0x80) { frame  }
-            ibat_buf = Buffer.concat([frame.slice(9,12),  new Buffer("\x00"), new Buffer(frame[11]>0x80 ? "\x00" : "\xFF")])
-            cbat_buf = Buffer.concat([frame.slice(12,15), new Buffer("\x00"), new Buffer(frame[14]>0x80 ? "\x00" : "\xFF")])
+            ibat_buf = Buffer.concat([frame.slice(9,12),  Buffer.from("\x00"), Buffer.from(frame[11]>0x80 ? "\x00" : "\xFF")])
+            cbat_buf = Buffer.concat([frame.slice(12,15), Buffer.from("\x00"), Buffer.from(frame[14]>0x80 ? "\x00" : "\xFF")])
             var ibat = bp.unpack('<i', ibat_buf);
             var cbat = bp.unpack('<i', cbat_buf);
             var finv = bp.unpack('<B', frame, 15);
@@ -467,7 +467,7 @@ function victron_mk2 (serialPortDevice) {
         var a  = ampere * 10
         var lo = a&0xFF
         var hi = a>>8
-        var data = new Buffer([0x03,lo, hi, 0x01, 0x80])
+        var data = Buffer.from([0x03,lo, hi, 0x01, 0x80])
         
         return communicate (create_frame("S", data), (frame) => {
             return {
@@ -491,6 +491,10 @@ function victron_mk2 (serialPortDevice) {
                 Object.assign(self.data, await self.ac_info()); 
                 Object.assign(self.data, await self.led_status()); 
                 Object.assign(self.data, await self.get_state()); 
+
+                if (self.debug_log === true) {
+                    console.log('data', JSON.stringify(self.data) );
+                }
             } 
             catch (exception ){
                 console.log("Exception in mk2 start(): ", exception)
